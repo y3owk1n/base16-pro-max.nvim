@@ -1459,7 +1459,7 @@ local function setup_treesitter_hl(highlights, c)
   highlights["@function.method.call"] = { link = "Function" }
 
   -- Operators and constructors
-  highlights["@constructor"] = { fg = U.get_group_color("foregrounds", "dim", c) }
+  highlights["@constructor"] = { fg = U.get_group_color("syntax", "comment", c) }
   highlights["@operator"] = { link = "Operator" }
 
   -- Keywords (comprehensive mapping)
@@ -1585,7 +1585,7 @@ local function setup_markdown_hl(highlights, c)
     fg = U.get_group_color("syntax", "operator", c),
     bold = M.config.styles.bold,
   }
-  highlights["@markup.quote"] = { fg = U.get_group_color("foregrounds", "dim", c) }
+  highlights["@markup.quote"] = { fg = U.get_group_color("syntax", "comment", c) }
   highlights["@markup.list"] = { fg = U.get_group_color("states", "error", c) }
   highlights["@markup.link"] = {
     fg = U.get_group_color("syntax", "keyword", c),
@@ -2128,7 +2128,7 @@ local default_config = {
       type = "yellow",
       comment = "fg_dark",
       operator = "cyan",
-      delimiter = "fg_dim",
+      delimiter = "fg_dark",
       deprecated = "brown",
     },
 
