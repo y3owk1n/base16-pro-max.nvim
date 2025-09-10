@@ -166,7 +166,8 @@ require("base16").setup({
       type = "yellow",
       comment = "fg_dark",
       operator = "cyan",
-      delimiter = "fg_dim",
+      delimiter = "fg_dark",
+      deprecated = "brown",
     },
     states = {
       error = "red",
