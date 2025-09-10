@@ -367,20 +367,24 @@ The current plugin integrations reflect my personal Neovim setup - these are the
 
 **Gruvbox Dark:**
 
+![gruv-box-dark](https://github.com/user-attachments/assets/da68601c-33f4-40c2-b8cc-8a713a9b114a)
+
 ```lua
 require("base16").setup({
   colors = {
     base00 = "#282828", base01 = "#3c3836", base02 = "#504945",
-    base03 = "#665c54", base04 = "#bdae93", base05 = "#d5c4a1",
-    base06 = "#ebdbb2", base07 = "#fbf1c7", base08 = "#fb4934",
-    base09 = "#fe8019", base0A = "#fabd2f", base0B = "#b8bb26",
-    base0C = "#8ec07c", base0D = "#83a598", base0E = "#d3869b",
-    base0F = "#d65d0e",
+    base03 = "#665c54", base04 = "#928374", base05 = "#ebdbb2",
+    base06 = "#fbf1c7", base07 = "#f9f5d7", base08 = "#cc241d",
+    base09 = "#d65d0e", base0A = "#d79921", base0B = "#98971a",
+    base0C = "#689d6a", base0D = "#458588", base0E = "#b16286",
+    base0F = "#9d0006",
   },
 })
 ```
 
 **Nord:**
+
+![nord](https://github.com/user-attachments/assets/718e1eed-de34-48f8-bcfe-c5cb39371837)
 
 ```lua
 require("base16").setup({
@@ -391,6 +395,40 @@ require("base16").setup({
     base09 = "#d08770", base0A = "#ebcb8b", base0B = "#a3be8c",
     base0C = "#88c0d0", base0D = "#81a1c1", base0E = "#b48ead",
     base0F = "#5e81ac",
+  },
+})
+```
+
+**Rose Pine Moon**
+
+![rose-pine-moon](https://github.com/user-attachments/assets/ced04a19-11ab-4196-9f6b-b2d11f5a6a46)
+
+```lua
+require("base16").setup({
+  colors = {
+    base00 = "#232136", base01 = "#2a273f", base02 = "#393552",
+    base03 = "#6e6a86", base04 = "#908caa", base05 = "#e0def4",
+    base06 = "#e0def4", base07 = "#56526e", base08 = "#eb6f92",
+    base09 = "#f6c177", base0A = "#ea9a97", base0B = "#3e8fb0",
+    base0C = "#9ccfd8", base0D = "#c4a7e7", base0E = "#f6c177",
+    base0F = "#56526e",
+  },
+})
+```
+
+**Catppuccin Macchiato**
+
+![catppuccin-macchiato](https://github.com/user-attachments/assets/c951cf41-d2be-408e-86bf-689df53b5d52)
+
+```lua
+require("base16").setup({
+  colors = {
+    base00 = "#24273a", base01 = "#1e2030", base02 = "#363a4f",
+    base03 = "#494d64", base04 = "#5b6078", base05 = "#cad3f5",
+    base06 = "#f4dbd6", base07 = "#b7bdf8", base08 = "#ed8796",
+    base09 = "#f5a97f", base0A = "#eed49f", base0B = "#a6da95",
+    base0C = "#8bd5ca", base0D = "#8aadf4", base0E = "#c6a0f6",
+    base0F = "#f0c6c6",
   },
 })
 ```
@@ -514,13 +552,15 @@ The plugin is structured in several key modules:
 The plugin uses a hierarchical color system:
 
 ```
+
 Base16 Raw Colors (base00-base0F)
-    ↓
+↓
 Semantic Aliases (bg, fg, red, blue, etc.)
-    ↓
+↓
 Color Groups (backgrounds, syntax, states, etc.)
-    ↓
+↓
 Highlight Groups (Normal, Function, Error, etc.)
+
 ```
 
 This allows for consistent theming while maintaining flexibility.
@@ -565,3 +605,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - [Rosepine](https://github.com/rose-pine/neovim) for inspiration on the modern colorscheme features
 - The Neovim community for feedback and contributions
 - All contributors who help improve this plugin
+
+```
+
+```
