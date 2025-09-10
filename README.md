@@ -22,10 +22,12 @@ While the Base16 specification provides a solid foundation for terminal and edit
 
 Whether you're a Base16 enthusiast wanting modern features or a user of contemporary themes looking for the Base16 aesthetic, this plugin provides the best of both worlds.
 
-### Goal of this project
+## Goal of this project
 
 The goal of this project is to provide a modern, highly customizable base16 implementation for Neovim that looks decent,
 as long as the base16 scheme provided are adhering to the guidelines as close as possible.
+
+Want another colorscheme but it doesn't have a plugin for Neovim? Just plug the colors in and you're good!
 
 ## Features
 
@@ -49,16 +51,7 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 {
   "y3owk1n/base16.nvim",
   config = function()
-    require("base16").setup({
-      colors = {
-        base00 = "#1f1f28", base01 = "#2a2a37", base02 = "#3a3a4e",
-        base03 = "#4e4e5e", base04 = "#9e9eaf", base05 = "#c5c5da",
-        base06 = "#dfdfef", base07 = "#e6e6f0", base08 = "#ff5f87",
-        base09 = "#ff8700", base0A = "#ffaf00", base0B = "#5fff87",
-        base0C = "#5fd7ff", base0D = "#5fafff", base0E = "#af87ff",
-        base0F = "#d7875f",
-      },
-    })
+    require("base16").setup({ --[[ your config ]] })
     vim.cmd.colorscheme("base16")
   end
 }
@@ -77,6 +70,9 @@ use {
 ```
 
 ## Quick Start
+
+> [!NOTE]
+> All features and integration are disabled by default, feel free to enable them in your config.
 
 ```lua
 -- Minimal setup with Kanagawa-inspired colors
@@ -358,7 +354,7 @@ local valid, missing = base16.validate_colors(my_colors)
 - **Which Key**: Key binding hints
 - **Flash**: Jump navigation
 
-### Why These Plugins?
+### Why Only These Few Plugins?
 
 The current plugin integrations reflect my personal Neovim setup - these are the plugins I use daily and can thoroughly test. Rather than adding superficial support for plugins I don't use, I've focused on providing high-quality integrations for my actual workflow.
 
