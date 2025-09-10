@@ -306,7 +306,8 @@ M.get_group_color({group}, {key})                            *M.get_group_color*
         (string|nil)  The resolved color, or nil if not found
 
 
-M.blend_colors({fg_color}, {bg_color}, {alpha})                 *M.blend_colors*
+                                                                *M.blend_colors*
+M.blend_colors({fg_color}, {bg_color}, {alpha})
     Blend two colors together
 
     Parameters: ~
