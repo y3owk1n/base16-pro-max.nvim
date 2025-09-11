@@ -1631,6 +1631,40 @@ local function setup_diagnostics_hl(highlights, c)
     strikethrough = true,
   }
 
+  -- Diagnostic floating
+  highlights.DiagnosticFloatingError = {
+    link = "DiagnosticError",
+  }
+  highlights.DiagnosticFloatingWarn = {
+    link = "DiagnosticWarn",
+  }
+  highlights.DiagnosticFloatingInfo = {
+    link = "DiagnosticInfo",
+  }
+  highlights.DiagnosticFloatingHint = {
+    link = "DiagnosticHint",
+  }
+  highlights.DiagnosticFloatingOk = {
+    link = "DiagnosticOk",
+  }
+
+  -- Diagnostic sign
+  highlights.DiagnosticSignError = {
+    link = "DiagnosticError",
+  }
+  highlights.DiagnosticSignWarn = {
+    link = "DiagnosticWarn",
+  }
+  highlights.DiagnosticSignInfo = {
+    link = "DiagnosticInfo",
+  }
+  highlights.DiagnosticSignHint = {
+    link = "DiagnosticHint",
+  }
+  highlights.DiagnosticSignOk = {
+    link = "DiagnosticOk",
+  }
+
   -- Diagnostic underlines
   highlights.DiagnosticUnderlineError = {
     sp = U.get_group_color("states", "error", c),
@@ -1647,6 +1681,60 @@ local function setup_diagnostics_hl(highlights, c)
   highlights.DiagnosticUnderlineHint = {
     sp = U.get_group_color("states", "hint", c),
     undercurl = true,
+  }
+
+  -- Diagnostic virtual text
+  highlights.DiagnosticVirtualTextError = {
+    fg = U.get_group_color("states", "error", c),
+    bg = U.get_group_color("states", "error", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualTextWarn = {
+    fg = U.get_group_color("states", "warning", c),
+    bg = U.get_group_color("states", "warning", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualTextInfo = {
+    fg = U.get_group_color("states", "info", c),
+    bg = U.get_group_color("states", "info", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualTextHint = {
+    fg = U.get_group_color("states", "hint", c),
+    bg = U.get_group_color("states", "hint", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualTextOk = {
+    fg = U.get_group_color("states", "success", c),
+    bg = U.get_group_color("states", "success", c),
+    blend = M.config.styles.blends.subtle,
+  }
+
+  -- Diagnostic virtual line
+  highlights.DiagnosticVirtualLinesError = {
+    fg = U.get_group_color("states", "error", c),
+    bg = U.get_group_color("states", "error", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualLinesWarn = {
+    fg = U.get_group_color("states", "warning", c),
+    bg = U.get_group_color("states", "warning", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualLinesInfo = {
+    fg = U.get_group_color("states", "info", c),
+    bg = U.get_group_color("states", "info", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualLinesHint = {
+    fg = U.get_group_color("states", "hint", c),
+    bg = U.get_group_color("states", "hint", c),
+    blend = M.config.styles.blends.subtle,
+  }
+  highlights.DiagnosticVirtualLinesOk = {
+    fg = U.get_group_color("states", "success", c),
+    bg = U.get_group_color("states", "success", c),
+    blend = M.config.styles.blends.subtle,
   }
 end
 
