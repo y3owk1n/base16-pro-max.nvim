@@ -244,19 +244,26 @@ local base16_alias_map = {
 
 ---@private
 ---Convert a color name to RGB values
----@param color string
----@return number[] rgb The RGB values
-function U.color_to_rgb(color)
-  local function byte(value, offset)
-    return bit.band(bit.rshift(value, offset), 0xFF)
+---@param hex string
+---@return {r: integer, g: integer, b: integer}|nil rgb The RGB values, or nil if not a valid hex color
+function U.hex_to_rgb(hex)
+  if hex == "NONE" then
+    return nil
   end
 
-  local new_color_ok, new_color = pcall(vim.api.nvim_get_color_by_name, color)
-  if not new_color_ok or new_color == -1 then
-    new_color = vim.opt.background:get() == "dark" and 000 or 255255255
+  if #hex ~= 7 or hex:sub(1, 1) ~= "#" then
+    return nil
   end
 
-  return { byte(new_color, 16), byte(new_color, 8), byte(new_color, 0) }
+  local r = tonumber(hex:sub(2, 3), 16)
+  local g = tonumber(hex:sub(4, 5), 16)
+  local b = tonumber(hex:sub(6, 7), 16)
+
+  if not r or not g or not b then
+    return nil
+  end
+
+  return { r = r, g = g, b = b }
 end
 
 ---@private
@@ -372,10 +379,8 @@ end
 ---@param alpha number Between 0 (background) and 1 (foreground)
 ---@return string blended_color The blended color as hex
 function U.blend(fg, bg, alpha)
-  local cache_key = string.format("%s%s%s", fg, bg, alpha)
-  if not cache_key then
-    return "NONE"
-  end
+  local cache_key = fg .. bg .. alpha
+
   if not _blend_cache then
     _blend_cache = {}
   end
@@ -384,15 +389,25 @@ function U.blend(fg, bg, alpha)
     return _blend_cache[cache_key]
   end
 
-  local fg_rgb = U.color_to_rgb(fg)
-  local bg_rgb = U.color_to_rgb(bg)
+  local fg_rgb = U.hex_to_rgb(fg)
+  local bg_rgb = U.hex_to_rgb(bg)
 
-  local function blend_channel(i)
-    local ret = (alpha * fg_rgb[i] + ((1 - alpha) * bg_rgb[i]))
-    return math.floor(math.min(math.max(0, ret), 255) + 0.5)
+  if not fg_rgb or not bg_rgb then
+    _blend_cache[cache_key] = "NONE"
+    return "NONE"
   end
 
-  local result = string.format("#%02X%02X%02X", blend_channel(1), blend_channel(2), blend_channel(3))
+  local function blend_channel(fg_val, bg_val)
+    local result = alpha * fg_val + (1 - alpha) * bg_val
+    return math.floor(math.min(math.max(0, result), 255) + 0.5)
+  end
+
+  local result = string.format(
+    "#%02X%02X%02X",
+    blend_channel(fg_rgb.r, bg_rgb.r),
+    blend_channel(fg_rgb.g, bg_rgb.g),
+    blend_channel(fg_rgb.b, bg_rgb.b)
+  )
 
   _blend_cache[cache_key] = result
   return result
