@@ -1,14 +1,14 @@
-# base16.nvim ✨
+# base16-pro-max.nvim ✨
 
 Base16 for modern Neovim — not just colors.
 
 > Most Base16 plugins stop at 16 colors + syntax.
 
-> base16.nvim goes beyond: transparency, dimmed inactive panes, semantic aliases, live blends, overrides, and first-class plugin integrations.
+> **base16-pro-max** goes beyond: transparency, dimmed inactive panes, semantic aliases, live blends, overrides, and first-class plugin integrations.
 
 > Paste any Base16 palette (Rose-pine, Catppuccin, Tokyo Night…) and instantly get a fully-featured, modern theme—no extra themes, no hacks, no switching plugins.
 
-## 🌈 Why base16.nvim is different
+## 🌈 Why base16-pro-max.nvim is different
 
 | Feature                                | Why it matters?                                                                                              |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
@@ -29,10 +29,10 @@ Using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 {
-  "y3owk1n/base16.nvim",
+  "y3owk1n/base16-pro-max.nvim",
   config = function()
-    require("base16").setup({ --[[ your config ]] })
-    vim.cmd.colorscheme("base16")
+    require("base16-pro-max").setup({ --[[ your config ]] })
+    vim.cmd.colorscheme("base16-pro-max")
   end
 }
 ```
@@ -41,10 +41,10 @@ Using [packer.nvim](https://github.com/wbthomason/packer.nvim):
 
 ```lua
 use {
-  "y3owk1n/base16.nvim",
+  "y3owk1n/base16-pro-max.nvim",
   config = function()
-    require("base16").setup({ --[[ your config ]] })
-    vim.cmd.colorscheme("base16")
+    require("base16-pro-max").setup({ --[[ your config ]] })
+    vim.cmd.colorscheme("base16-pro-max")
   end
 }
 ```
@@ -57,10 +57,10 @@ use {
 ```lua
 -- Minimal setup with Kanagawa-inspired colors
 {
-  "y3owk1n/base16.nvim",
+  "y3owk1n/base16-pro-max.nvim",
   priority = 1000,
   config = function()
-    require("base16").setup {
+    require("base16-pro-max").setup {
       colors = {
         base00 = "#1f1f28", base01 = "#2a2a37", base02 = "#3a3a4e",
         base03 = "#4e4e5e", base04 = "#9e9eaf", base05 = "#c5c5da",
@@ -72,7 +72,7 @@ use {
       styles = { italic = true, transparency = true },
       plugins = { enable_all = true },
     }
-    vim.cmd.colorscheme "base16"
+    vim.cmd.colorscheme "base16-pro-max"
   end,
 }
 ```
@@ -86,7 +86,7 @@ _That’s it—no extra themes to install, no generated files, no external build
 ![gruv-box-dark](https://github.com/user-attachments/assets/da68601c-33f4-40c2-b8cc-8a713a9b114a)
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = {
     base00 = "#282828", base01 = "#3c3836", base02 = "#504945",
     base03 = "#665c54", base04 = "#928374", base05 = "#ebdbb2",
@@ -103,7 +103,7 @@ require("base16").setup({
 ![nord](https://github.com/user-attachments/assets/718e1eed-de34-48f8-bcfe-c5cb39371837)
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = {
     base00 = "#2e3440", base01 = "#3b4252", base02 = "#434c5e",
     base03 = "#4c566a", base04 = "#d8dee9", base05 = "#e5e9f0",
@@ -120,7 +120,7 @@ require("base16").setup({
 ![rose-pine-moon](https://github.com/user-attachments/assets/ced04a19-11ab-4196-9f6b-b2d11f5a6a46)
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = {
     base00 = "#232136", base01 = "#2a273f", base02 = "#393552",
     base03 = "#6e6a86", base04 = "#908caa", base05 = "#e0def4",
@@ -137,7 +137,7 @@ require("base16").setup({
 ![catppuccin-macchiato](https://github.com/user-attachments/assets/c951cf41-d2be-408e-86bf-689df53b5d52)
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = {
     base00 = "#24273a", base01 = "#1e2030", base02 = "#363a4f",
     base03 = "#494d64", base04 = "#5b6078", base05 = "#cad3f5",
@@ -167,7 +167,7 @@ _Need more? [Tinted Theming](https://github.com/tinted-theming/schemes) has 200+
 ### Default Configuration
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   -- Base16 colors (required)
   colors = {
     base00 = "#000000", -- Default background
@@ -305,7 +305,7 @@ The purpose is based of [tinted theming scheme](https://github.com/tinted-themin
 ### Custom Color Groups
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = { --[[ your base16 colors ]] },
   color_groups = {
     syntax = {
@@ -324,7 +324,7 @@ require("base16").setup({
 ### Custom Highlight Groups
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = { --[[ your base16 colors ]] },
   highlight_groups = {
     -- Custom highlight using base16 colors
@@ -343,7 +343,7 @@ require("base16").setup({
 
 ```lua
 -- Dark theme with transparency and italics
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = { --[[ dark colors ]] },
   styles = {
     transparency = true,
@@ -354,7 +354,7 @@ require("base16").setup({
 })
 
 -- Light theme with subtle blends
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = { --[[ light colors ]] },
   styles = {
     blends = {
@@ -370,7 +370,7 @@ require("base16").setup({
 ### Plugin Integration
 
 ```lua
-require("base16").setup({
+require("base16-pro-max").setup({
   colors = { --[[ your colors ]] },
   plugins = {
     -- Enable all supported plugins
@@ -386,35 +386,35 @@ require("base16").setup({
 ## API Reference
 
 ```lua
-local base16 = require("base16")
+local base16_pro_max = require("base16-pro-max")
 
 -- Setup the plugin (required)
-base16.setup(config)
+base16_pro_max.setup(config)
 
 -- Apply the colorscheme
-vim.cmd.colorscheme("base16")
+vim.cmd.colorscheme("base16-pro-max")
 
 -- Get semantic color palette
-local colors = base16.colors()
+local colors = base16_pro_max.colors()
 
 -- Get specific color
-local red = base16.get_color("red")
-local bg = base16.get_color("bg")
+local red = base16_pro_max.get_color("red")
+local bg = base16_pro_max.get_color("bg")
 
 -- Get multiple colors
-local palette = base16.get_colors({"red", "blue", "green"})
+local palette = base16_pro_max.get_colors({"red", "blue", "green"})
 
 -- Get raw base16 colors
-local raw = base16.raw_colors()
+local raw = base16_pro_max.raw_colors()
 
 -- Get color from groups
-local error_color = base16.get_group_color("states", "error")
+local error_color = base16_pro_max.get_group_color("states", "error")
 
 -- Blend colors
-local blended = base16.blend_colors("#ff0000", "#000000", 0.5)
+local blended = base16_pro_max.blend_colors("#ff0000", "#000000", 0.5)
 
 -- Validate colors
-local valid, missing = base16.validate_colors(my_colors)
+local valid, missing = base16_pro_max.validate_colors(my_colors)
 ```
 
 ## 🔌 Supported Plugins

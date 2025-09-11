@@ -1,0 +1,345 @@
+*base16-pro-max.nvim* Base16 colorscheme plugin
+
+base16-pro-max.nvim is a highly configurable colorscheme engine for Neovim that
+aims to not only covers base16 colorschemes, but also include features
+that are built-in to most colorscheme plugins (e.g. dim_inactive_windows,
+blends, italics, custom highlights, etc.)
+
+It allows defining a semantic color palette, generating highlight
+groups automatically, and integrating with popular plugins.
+
+# Features: ~
+ - Complete Base16 Implementation: Full support for the Base16 specification with semantic aliases
+ - Modern Styling Options: Transparency, italics, bold text, window dimming, and blend modes
+ - Extensive Plugin Support: Native integrations for popular Neovim plugins
+ - Semantic Color Groups: Intuitive color organization for backgrounds, syntax, states, diff, and search
+ - Runtime Validation: Comprehensive configuration validation with helpful error messages
+ - Performance Optimized: Efficient caching and minimal runtime overhead
+ - Highly Customizable: Override any aspect through configuration or runtime functions
+
+# Usage: ~
+
+>lua
+  require("base16-pro-max").setup({
+    colors = {
+      base00 = "#1f1f28", base01 = "#2a2a37", base02 = "#3a3a4e",
+      base03 = "#4e4e5e", base04 = "#9e9eaf", base05 = "#c5c5da",
+      base06 = "#dfdfef", base07 = "#e6e6f0", base08 = "#ff5f87",
+      base09 = "#ff8700", base0A = "#ffaf00", base0B = "#5fff87",
+      base0C = "#5fd7ff", base0D = "#5fafff", base0E = "#af87ff",
+      base0F = "#d7875f",
+    },
+  })
+  vim.cmd.colorscheme("base16-pro-max")
+<
+
+==============================================================================
+Table of Contents                                      *base16-pro-max.contents*
+
+Types ··················································· |base16-pro-max.types|
+Setup ··················································· |base16-pro-max.setup|
+API ······················································· |base16-pro-max.api|
+
+==============================================================================
+Types                                                     *base16-pro-max.types*
+
+Base16ProMax.Config                                        *Base16ProMax.Config*
+
+    Fields: ~
+        {colors?}            (table<Base16ProMax.Group.Raw,string>)                                                          Colors to override
+        {styles?}            (Base16ProMax.Config.Styles)                                                                    Styles to override
+        {highlight_groups?}  (table<string,vim.api.keyset.highlight>)                                                        Additional highlight groups to set
+        {before_highlight?}  (fun(group:string,opts:vim.api.keyset.highlight,c:table<Base16ProMax.Group.Alias,string>):nil)  Callback to run before setting highlight groups
+        {plugins?}           (Base16ProMax.Config.Plugins)                                                                   Enable/disable plugins
+        {color_groups?}      (Base16ProMax.Config.ColorGroups)                                                               Color groups to override
+
+
+Base16ProMax.Config.ColorGroups                *Base16ProMax.Config.ColorGroups*
+
+    Fields: ~
+        {backgrounds?}  (Base16ProMax.Config.ColorGroups.Backgrounds)  Background colors
+        {foregrounds?}  (Base16ProMax.Config.ColorGroups.Foregrounds)  Foreground colors
+        {syntax?}       (Base16ProMax.Config.ColorGroups.Syntax)       Syntax colors
+        {states?}       (Base16ProMax.Config.ColorGroups.States)       Semantic colors
+        {diff?}         (Base16ProMax.Config.ColorGroups.Diff)         Diff colors
+        {git?}          (Base16ProMax.Config.ColorGroups.Git)          Git colors
+        {search?}       (Base16ProMax.Config.ColorGroups.Search)       Search colors
+
+
+Base16ProMax.Config.ColorGroups.Color    *Base16ProMax.Config.ColorGroups.Color*
+
+    Type: ~
+        string|fun(c:table<Base16ProMax.Group.Alias,string>,blend_fn:function):string
+
+
+                                   *Base16ProMax.Config.ColorGroups.Backgrounds*
+Base16ProMax.Config.ColorGroups.Backgrounds
+
+    Fields: ~
+        {normal?}         (Base16ProMax.Config.ColorGroups.Color)  Normal background
+        {dim?}            (Base16ProMax.Config.ColorGroups.Color)  Dim background
+        {light?}          (Base16ProMax.Config.ColorGroups.Color)  Light background
+        {selection?}      (Base16ProMax.Config.ColorGroups.Color)  Selection background
+        {cursor_line?}    (Base16ProMax.Config.ColorGroups.Color)  Cursor line background
+        {cursor_column?}  (Base16ProMax.Config.ColorGroups.Color)  Cursor column background
+
+
+                                   *Base16ProMax.Config.ColorGroups.Foregrounds*
+Base16ProMax.Config.ColorGroups.Foregrounds
+
+    Fields: ~
+        {normal?}       (Base16ProMax.Config.ColorGroups.Color)  Normal foreground
+        {dim?}          (Base16ProMax.Config.ColorGroups.Color)  Dim foreground
+        {dark?}         (Base16ProMax.Config.ColorGroups.Color)  Dark foreground
+        {light?}        (Base16ProMax.Config.ColorGroups.Color)  Light foreground
+        {bright?}       (Base16ProMax.Config.ColorGroups.Color)  Bright foreground
+        {comment?}      (Base16ProMax.Config.ColorGroups.Color)  Comment foreground
+        {line_number?}  (Base16ProMax.Config.ColorGroups.Color)  Line number foreground
+        {deprecated?}   (Base16ProMax.Config.ColorGroups.Color)  deprecated foreground
+
+
+Base16ProMax.Config.ColorGroups.Syntax  *Base16ProMax.Config.ColorGroups.Syntax*
+
+    Fields: ~
+        {variable?}       (Base16ProMax.Config.ColorGroups.Color)  Variable foreground
+        {constant?}       (Base16ProMax.Config.ColorGroups.Color)  Constant foreground
+        {string?}         (Base16ProMax.Config.ColorGroups.Color)  String foreground
+        {number?}         (Base16ProMax.Config.ColorGroups.Color)  Number foreground
+        {boolean?}        (Base16ProMax.Config.ColorGroups.Color)  Boolean foreground
+        {keyword?}        (Base16ProMax.Config.ColorGroups.Color)  Keyword foreground
+        {function_name?}  (Base16ProMax.Config.ColorGroups.Color)  Function name foreground
+        {type?}           (Base16ProMax.Config.ColorGroups.Color)  Type foreground
+        {comment?}        (Base16ProMax.Config.ColorGroups.Color)  Comment foreground
+        {operator?}       (Base16ProMax.Config.ColorGroups.Color)  Operator foreground
+        {delimiter?}      (Base16ProMax.Config.ColorGroups.Color)  Delimiter foreground
+
+
+Base16ProMax.Config.ColorGroups.States  *Base16ProMax.Config.ColorGroups.States*
+
+    Fields: ~
+        {error?}    (Base16ProMax.Config.ColorGroups.Color)  Error foreground
+        {warning?}  (Base16ProMax.Config.ColorGroups.Color)  Warning foreground
+        {info?}     (Base16ProMax.Config.ColorGroups.Color)  Info foreground
+        {hint?}     (Base16ProMax.Config.ColorGroups.Color)  Hint foreground
+        {success?}  (Base16ProMax.Config.ColorGroups.Color)  Success foreground
+
+
+Base16ProMax.Config.ColorGroups.Diff      *Base16ProMax.Config.ColorGroups.Diff*
+
+    Fields: ~
+        {added?}    (Base16ProMax.Config.ColorGroups.Color)  Added foreground
+        {removed?}  (Base16ProMax.Config.ColorGroups.Color)  Removed foreground
+        {changed?}  (Base16ProMax.Config.ColorGroups.Color)  Changed foreground
+        {text?}     (Base16ProMax.Config.ColorGroups.Color)  Text foreground
+
+
+Base16ProMax.Config.ColorGroups.Git        *Base16ProMax.Config.ColorGroups.Git*
+
+    Fields: ~
+        {added?}      (Base16ProMax.Config.ColorGroups.Color)  Added foreground
+        {removed?}    (Base16ProMax.Config.ColorGroups.Color)  Removed foreground
+        {changed?}    (Base16ProMax.Config.ColorGroups.Color)  Changed foreground
+        {untracked?}  (Base16ProMax.Config.ColorGroups.Color)  Untracked foreground
+
+
+Base16ProMax.Config.ColorGroups.Search  *Base16ProMax.Config.ColorGroups.Search*
+
+    Fields: ~
+        {match?}        (Base16ProMax.Config.ColorGroups.Color)  Match foreground
+        {current?}      (Base16ProMax.Config.ColorGroups.Color)  Current match foreground
+        {incremental?}  (Base16ProMax.Config.ColorGroups.Color)  Incremental match foreground
+
+
+Base16ProMax.Config.Styles                          *Base16ProMax.Config.Styles*
+
+    Fields: ~
+        {italic?}                (boolean)                            Enable italics
+        {bold?}                  (boolean)                            Enable bold text
+        {transparency?}          (boolean)                            Transparent background
+        {dim_inactive_windows?}  (boolean)                            Dim inactive windows
+        {blends?}                (Base16ProMax.Config.Styles.Blends)  Blend values to override
+        {use_cterm?}             (boolean)                            Use cterm colors (overrides colors)
+
+
+Base16ProMax.Config.Styles.Blends            *Base16ProMax.Config.Styles.Blends*
+
+    Fields: ~
+        {subtle?}  (number)  barely visible backgrounds (10%)
+        {medium?}  (number)  noticeable but not distracting (15%)
+        {strong?}  (number)  prominent highlights (25%)
+        {super?}   (number)  very prominent highlights (50%)
+
+
+Base16ProMax.Config.Plugins                        *Base16ProMax.Config.Plugins*
+
+    Fields: ~
+        {enable_all?}                                  (boolean)  Enable all plugins
+        {nvim_mini_mini_icons?}                        (boolean)  Enable Mini Icons
+        {nvim_mini_mini_diff?}                         (boolean)  Enable Mini Diff
+        {nvim_mini_mini_files?}                        (boolean)  Enable Mini Files
+        {nvim_mini_mini_pick?}                         (boolean)  Enable Mini Pick
+        {meandering_programmer_render_markdown_nvim?}  (boolean)  Enable Render Markdown
+        {y3owk1n_undo_glow_nvim?}                      (boolean)  Enable Undo Glow
+        {saghen_blink_cmp?}                            (boolean)  Enable Blink Cmp
+        {magicduck_grug_far_nvim?}                     (boolean)  Enable Grug Far
+        {folke_which_key_nvim?}                        (boolean)  Enable Which Key
+        {folke_flash_nvim?}                            (boolean)  Enable Flash
+        {lewis6991_gitsigns_nvim?}                     (boolean)  Enable Git Signs
+
+
+Base16ProMax.Group.Raw                                  *Base16ProMax.Group.Raw*
+
+    Variants: ~
+        ("base00")  Default background (Semantic Alias: bg)
+        ("base01")  Lighter Background (Used for status bars) (Semantic Alias: bg_dim)
+        ("base02")  Selection background (Semantic Alias: bg_light)
+        ("base03")  Comments, Invisibles, Line Highlighting (Semantic Alias: fg_dim)
+        ("base04")  Dark Foreground (Used for status bars) (Semantic Alias: fg_dark)
+        ("base05")  Default Foreground, Caret, Delimiters, Operators (Semantic Alias: fg)
+        ("base06")  Light foreground (Semantic Alias: fg_light)
+        ("base07")  The Lightest Foreground (Semantic Alias: fg_bright)
+        ("base08")  Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted (Semantic Alias: red)
+        ("base09")  Integers, Boolean, Constants, XML Attributes, Markup Link Url (Semantic Alias: orange)
+        ("base0A")  Classes, Markup Bold, Search Text Background (Semantic Alias: yellow)
+        ("base0B")  Strings, Inherited Class, Markup Code, Diff Inserted (Semantic Alias: green)
+        ("base0C")  Support, Regular Expressions, Escape Characters, Markup Quotes (Semantic Alias: cyan)
+        ("base0D")  Functions, Methods, Attribute IDs, Headings (Semantic Alias: blue)
+        ("base0E")  Keywords, Storage, Selector, Markup Italic, Diff Changed (Semantic Alias: purple)
+        ("base0F")  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> (Semantic Alias: brown)
+
+
+Base16ProMax.Group.Alias                              *Base16ProMax.Group.Alias*
+
+    Variants: ~
+        ("bg")         Default background (Raw Base16ProMax: base00)
+        ("bg_dim")     Lighter Background (Used for status bars) (Raw Base16ProMax: base01)
+        ("bg_light")   Selection background (Raw Base16ProMax: base02)
+        ("fg_dim")     Comments, Invisibles, Line Highlighting (Raw Base16ProMax: base03)
+        ("fg_dark")    Dark Foreground (Used for status bars) (Raw Base16ProMax: base04)
+        ("fg")         Default Foreground, Caret, Delimiters, Operators (Raw Base16ProMax: base05)
+        ("fg_light")   Light foreground (Raw Base16ProMax: base06)
+        ("fg_bright")  The Lightest Foreground (Raw Base16ProMax: base07)
+        ("red")        Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted (Raw Base16ProMax: base08)
+        ("orange")     Integers, Boolean, Constants, XML Attributes, Markup Link Url (Raw Base16ProMax: base09)
+        ("yellow")     Classes, Markup Bold, Search Text Background (Raw Base16ProMax: base0A)
+        ("green")      Strings, Inherited Class, Markup Code, Diff Insert
+        ("cyan")       Support, Regular Expressions, Escape Characters, Markup Quotes (Raw Base16ProMax: base0C)
+        ("blue")       Functions, Methods, Attribute IDs, Headings (Raw Base16ProMax: base0D)
+        ("purple")     Keywords, Storage, Selector, Markup Italic, Diff Changed (Raw Base16ProMax: base0E)
+        ("brown")      Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> (Raw Base16ProMax: base0F)
+
+
+M.config                                                              *M.config*
+
+    Type: ~
+        (Base16ProMax.Config)
+
+
+==============================================================================
+Setup                                                     *base16-pro-max.setup*
+
+M.setup({user_config?})                                                *M.setup*
+    Setup the base16-pro-max.nvim plugin
+
+    Parameters: ~
+        {user_config?}  (Base16ProMax.Config)
+
+    Returns: ~
+        (nil)
+
+    Usage: ~
+>lua
+        require("base16-pro-max").setup({
+          colors = { base00 = "#1f1f28", base01 = "#2a2a37", ... }
+        })
+<
+
+
+==============================================================================
+API                                                         *base16-pro-max.api*
+
+M.colorscheme()                                                  *M.colorscheme*
+    Setup the colorscheme
+
+    Usage: ~
+>lua
+        vim.cmd.colorscheme("base16-pro-max")
+<
+
+
+M.colors()                                                            *M.colors*
+    Get the semantic color palette
+
+    Returns: ~
+        (table<Base16ProMax.Group.Alias,string>|nil)  The semantic color palette, or nil if not set up
+
+
+M.get_color({name})                                                *M.get_color*
+    Get a specific color by name
+
+    Parameters: ~
+        {name}  (Base16ProMax.Group.Alias|Base16ProMax.Group.Raw)  Color name (e.g., "red", "bg", "base08")
+
+    Returns: ~
+        (string|nil)  The hex color value, or nil if not found
+
+
+M.get_colors({names})                                             *M.get_colors*
+    Get multiple colors at once
+
+    Parameters: ~
+        {names}  (Base16ProMax.Group.Alias[]|Base16ProMax.Group.Raw[])  Array of color names
+
+    Returns: ~
+        (table<string,string>)  Map of color names to hex values
+
+
+M.raw_colors()                                                    *M.raw_colors*
+    Get all raw base16 colors
+
+    Returns: ~
+        (table<Base16ProMax.Group.Raw,string>|nil)  The raw base16 colors, or nil if not set up
+
+
+M.color_mapping()                                              *M.color_mapping*
+    Get semantic color mapping
+
+    Returns: ~
+        (table<Base16ProMax.Group.Alias,Base16ProMax.Group.Raw>)  The semantic to raw color mapping
+
+
+M.get_group_color({group}, {key})                            *M.get_group_color*
+    Get a color from groups
+
+    Parameters: ~
+        {group}  (string)  The color group name
+        {key}    (string)  The color key within the group
+
+    Returns: ~
+        (string|nil)  The resolved color, or nil if not found
+
+
+M.blend_colors({fg_color}, {bg_color}, {alpha})                 *M.blend_colors*
+    Blend two colors together
+
+    Parameters: ~
+        {fg_color}  (string)  Foreground color (hex)
+        {bg_color}  (string)  Background color (hex)
+        {alpha}     (number)  Alpha value between 0 (background) and 1 (foreground)
+
+    Returns: ~
+        (string)  The blended color as hex
+
+
+M.validate_colors({colors})                                  *M.validate_colors*
+    Validate color configuration
+
+    Parameters: ~
+        {colors}  (table<Base16ProMax.Group.Raw,string>)  The colors to validate
+
+    Returns: ~
+        (boolean)   True if all required colors are present
+        (string[])  Array of missing color keys
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:

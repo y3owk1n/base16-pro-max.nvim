@@ -1,9 +1,9 @@
----@module "base16"
+---@module "base16-pro-max"
 
 ---@brief [[
----*base16.nvim* Base16 colorscheme plugin
+---*base16-pro-max.nvim* Base16 colorscheme plugin
 ---
----Base16 is a highly configurable colorscheme engine for Neovim that
+---base16-pro-max.nvim is a highly configurable colorscheme engine for Neovim that
 ---aims to not only covers base16 colorschemes, but also include features
 ---that are built-in to most colorscheme plugins (e.g. dim_inactive_windows,
 ---blends, italics, custom highlights, etc.)
@@ -23,7 +23,7 @@
 ---# Usage: ~
 ---
 --->lua
----  require("base16").setup({
+---  require("base16-pro-max").setup({
 ---    colors = {
 ---      base00 = "#1f1f28", base01 = "#2a2a37", base02 = "#3a3a4e",
 ---      base03 = "#4e4e5e", base04 = "#9e9eaf", base05 = "#c5c5da",
@@ -33,11 +33,11 @@
 ---      base0F = "#d7875f",
 ---    },
 ---  })
----  vim.cmd.colorscheme("base16")
+---  vim.cmd.colorscheme("base16-pro-max")
 ---<
 ---@brief ]]
 
----@toc base16.contents
+---@toc base16-pro-max.contents
 
 local M = {}
 
@@ -54,10 +54,10 @@ local did_setup = false
 ---@type table<string, string>|nil
 local _blend_cache = nil
 
----@type Base16.Group.Alias[]|nil
+---@type Base16ProMax.Group.Alias[]|nil
 local _base16_aliases = nil
 
----@type Base16.Group.Raw[]|nil
+---@type Base16ProMax.Group.Raw[]|nil
 local _base16_raw = nil
 
 ---@type table<string, string>|nil
@@ -77,7 +77,7 @@ local _computed_highlights_cache = nil
 -- ------------------------------------------------------------------
 
 ---Reference `https://github.com/tinted-theming/home/blob/main/styling.md`
----@type table<Base16.Group.Alias, Base16.Group.Raw>
+---@type table<Base16ProMax.Group.Alias, Base16ProMax.Group.Raw>
 local base16_alias_map = {
   bg = "base00", -- Default background
   bg_dim = "base01", -- Lighter Background (Used for status bars)
@@ -101,97 +101,97 @@ local base16_alias_map = {
 -- Types
 -- ------------------------------------------------------------------
 
----@mod base16.types Types
+---@mod base16-pro-max.types Types
 
----@class Base16.Config
----@field colors? table<Base16.Group.Raw, string> Colors to override
----@field styles? Base16.Config.Styles Styles to override
+---@class Base16ProMax.Config
+---@field colors? table<Base16ProMax.Group.Raw, string> Colors to override
+---@field styles? Base16ProMax.Config.Styles Styles to override
 ---@field highlight_groups? table<string, vim.api.keyset.highlight> Additional highlight groups to set
----@field before_highlight? fun(group: string, opts: vim.api.keyset.highlight, c: table<Base16.Group.Alias, string>): nil Callback to run before setting highlight groups
----@field plugins? Base16.Config.Plugins Enable/disable plugins
----@field color_groups? Base16.Config.ColorGroups Color groups to override
+---@field before_highlight? fun(group: string, opts: vim.api.keyset.highlight, c: table<Base16ProMax.Group.Alias, string>): nil Callback to run before setting highlight groups
+---@field plugins? Base16ProMax.Config.Plugins Enable/disable plugins
+---@field color_groups? Base16ProMax.Config.ColorGroups Color groups to override
 
----@class Base16.Config.ColorGroups
----@field backgrounds? Base16.Config.ColorGroups.Backgrounds Background colors
----@field foregrounds? Base16.Config.ColorGroups.Foregrounds Foreground colors
----@field syntax? Base16.Config.ColorGroups.Syntax Syntax colors
----@field states? Base16.Config.ColorGroups.States Semantic colors
----@field diff? Base16.Config.ColorGroups.Diff Diff colors
----@field git? Base16.Config.ColorGroups.Git Git colors
----@field search? Base16.Config.ColorGroups.Search Search colors
+---@class Base16ProMax.Config.ColorGroups
+---@field backgrounds? Base16ProMax.Config.ColorGroups.Backgrounds Background colors
+---@field foregrounds? Base16ProMax.Config.ColorGroups.Foregrounds Foreground colors
+---@field syntax? Base16ProMax.Config.ColorGroups.Syntax Syntax colors
+---@field states? Base16ProMax.Config.ColorGroups.States Semantic colors
+---@field diff? Base16ProMax.Config.ColorGroups.Diff Diff colors
+---@field git? Base16ProMax.Config.ColorGroups.Git Git colors
+---@field search? Base16ProMax.Config.ColorGroups.Search Search colors
 
----@alias Base16.Config.ColorGroups.Color string|fun(c: table<Base16.Group.Alias, string>, blend_fn: function): string
+---@alias Base16ProMax.Config.ColorGroups.Color string|fun(c: table<Base16ProMax.Group.Alias, string>, blend_fn: function): string
 
----@class Base16.Config.ColorGroups.Backgrounds
----@field normal? Base16.Config.ColorGroups.Color Normal background
----@field dim? Base16.Config.ColorGroups.Color Dim background
----@field light? Base16.Config.ColorGroups.Color Light background
----@field selection? Base16.Config.ColorGroups.Color Selection background
----@field cursor_line? Base16.Config.ColorGroups.Color Cursor line background
----@field cursor_column? Base16.Config.ColorGroups.Color Cursor column background
+---@class Base16ProMax.Config.ColorGroups.Backgrounds
+---@field normal? Base16ProMax.Config.ColorGroups.Color Normal background
+---@field dim? Base16ProMax.Config.ColorGroups.Color Dim background
+---@field light? Base16ProMax.Config.ColorGroups.Color Light background
+---@field selection? Base16ProMax.Config.ColorGroups.Color Selection background
+---@field cursor_line? Base16ProMax.Config.ColorGroups.Color Cursor line background
+---@field cursor_column? Base16ProMax.Config.ColorGroups.Color Cursor column background
 
----@class Base16.Config.ColorGroups.Foregrounds
----@field normal? Base16.Config.ColorGroups.Color Normal foreground
----@field dim? Base16.Config.ColorGroups.Color Dim foreground
----@field dark? Base16.Config.ColorGroups.Color Dark foreground
----@field light? Base16.Config.ColorGroups.Color Light foreground
----@field bright? Base16.Config.ColorGroups.Color Bright foreground
----@field comment? Base16.Config.ColorGroups.Color Comment foreground
----@field line_number? Base16.Config.ColorGroups.Color Line number foreground
----@field deprecated? Base16.Config.ColorGroups.Color deprecated foreground
+---@class Base16ProMax.Config.ColorGroups.Foregrounds
+---@field normal? Base16ProMax.Config.ColorGroups.Color Normal foreground
+---@field dim? Base16ProMax.Config.ColorGroups.Color Dim foreground
+---@field dark? Base16ProMax.Config.ColorGroups.Color Dark foreground
+---@field light? Base16ProMax.Config.ColorGroups.Color Light foreground
+---@field bright? Base16ProMax.Config.ColorGroups.Color Bright foreground
+---@field comment? Base16ProMax.Config.ColorGroups.Color Comment foreground
+---@field line_number? Base16ProMax.Config.ColorGroups.Color Line number foreground
+---@field deprecated? Base16ProMax.Config.ColorGroups.Color deprecated foreground
 
----@class Base16.Config.ColorGroups.Syntax
----@field variable? Base16.Config.ColorGroups.Color Variable foreground
----@field constant? Base16.Config.ColorGroups.Color Constant foreground
----@field string? Base16.Config.ColorGroups.Color String foreground
----@field number? Base16.Config.ColorGroups.Color Number foreground
----@field boolean? Base16.Config.ColorGroups.Color Boolean foreground
----@field keyword? Base16.Config.ColorGroups.Color Keyword foreground
----@field function_name? Base16.Config.ColorGroups.Color Function name foreground
----@field type? Base16.Config.ColorGroups.Color Type foreground
----@field comment? Base16.Config.ColorGroups.Color Comment foreground
----@field operator? Base16.Config.ColorGroups.Color Operator foreground
----@field delimiter? Base16.Config.ColorGroups.Color Delimiter foreground
+---@class Base16ProMax.Config.ColorGroups.Syntax
+---@field variable? Base16ProMax.Config.ColorGroups.Color Variable foreground
+---@field constant? Base16ProMax.Config.ColorGroups.Color Constant foreground
+---@field string? Base16ProMax.Config.ColorGroups.Color String foreground
+---@field number? Base16ProMax.Config.ColorGroups.Color Number foreground
+---@field boolean? Base16ProMax.Config.ColorGroups.Color Boolean foreground
+---@field keyword? Base16ProMax.Config.ColorGroups.Color Keyword foreground
+---@field function_name? Base16ProMax.Config.ColorGroups.Color Function name foreground
+---@field type? Base16ProMax.Config.ColorGroups.Color Type foreground
+---@field comment? Base16ProMax.Config.ColorGroups.Color Comment foreground
+---@field operator? Base16ProMax.Config.ColorGroups.Color Operator foreground
+---@field delimiter? Base16ProMax.Config.ColorGroups.Color Delimiter foreground
 
----@class Base16.Config.ColorGroups.States
----@field error? Base16.Config.ColorGroups.Color Error foreground
----@field warning? Base16.Config.ColorGroups.Color Warning foreground
----@field info? Base16.Config.ColorGroups.Color Info foreground
----@field hint? Base16.Config.ColorGroups.Color Hint foreground
----@field success? Base16.Config.ColorGroups.Color Success foreground
+---@class Base16ProMax.Config.ColorGroups.States
+---@field error? Base16ProMax.Config.ColorGroups.Color Error foreground
+---@field warning? Base16ProMax.Config.ColorGroups.Color Warning foreground
+---@field info? Base16ProMax.Config.ColorGroups.Color Info foreground
+---@field hint? Base16ProMax.Config.ColorGroups.Color Hint foreground
+---@field success? Base16ProMax.Config.ColorGroups.Color Success foreground
 
----@class Base16.Config.ColorGroups.Diff
----@field added? Base16.Config.ColorGroups.Color Added foreground
----@field removed? Base16.Config.ColorGroups.Color Removed foreground
----@field changed? Base16.Config.ColorGroups.Color Changed foreground
----@field text? Base16.Config.ColorGroups.Color Text foreground
+---@class Base16ProMax.Config.ColorGroups.Diff
+---@field added? Base16ProMax.Config.ColorGroups.Color Added foreground
+---@field removed? Base16ProMax.Config.ColorGroups.Color Removed foreground
+---@field changed? Base16ProMax.Config.ColorGroups.Color Changed foreground
+---@field text? Base16ProMax.Config.ColorGroups.Color Text foreground
 
----@class Base16.Config.ColorGroups.Git
----@field added? Base16.Config.ColorGroups.Color Added foreground
----@field removed? Base16.Config.ColorGroups.Color Removed foreground
----@field changed? Base16.Config.ColorGroups.Color Changed foreground
----@field untracked? Base16.Config.ColorGroups.Color Untracked foreground
+---@class Base16ProMax.Config.ColorGroups.Git
+---@field added? Base16ProMax.Config.ColorGroups.Color Added foreground
+---@field removed? Base16ProMax.Config.ColorGroups.Color Removed foreground
+---@field changed? Base16ProMax.Config.ColorGroups.Color Changed foreground
+---@field untracked? Base16ProMax.Config.ColorGroups.Color Untracked foreground
 
----@class Base16.Config.ColorGroups.Search
----@field match? Base16.Config.ColorGroups.Color Match foreground
----@field current? Base16.Config.ColorGroups.Color Current match foreground
----@field incremental? Base16.Config.ColorGroups.Color Incremental match foreground
+---@class Base16ProMax.Config.ColorGroups.Search
+---@field match? Base16ProMax.Config.ColorGroups.Color Match foreground
+---@field current? Base16ProMax.Config.ColorGroups.Color Current match foreground
+---@field incremental? Base16ProMax.Config.ColorGroups.Color Incremental match foreground
 
----@class Base16.Config.Styles
+---@class Base16ProMax.Config.Styles
 ---@field italic? boolean Enable italics
 ---@field bold? boolean Enable bold text
 ---@field transparency? boolean Transparent background
 ---@field dim_inactive_windows? boolean Dim inactive windows
----@field blends? Base16.Config.Styles.Blends Blend values to override
+---@field blends? Base16ProMax.Config.Styles.Blends Blend values to override
 ---@field use_cterm? boolean Use cterm colors (overrides colors)
 
----@class Base16.Config.Styles.Blends
+---@class Base16ProMax.Config.Styles.Blends
 ---@field subtle? number barely visible backgrounds (10%)
 ---@field medium? number noticeable but not distracting (15%)
 ---@field strong? number prominent highlights (25%)
 ---@field super? number very prominent highlights (50%)
 
----@class Base16.Config.Plugins
+---@class Base16ProMax.Config.Plugins
 ---@field enable_all? boolean Enable all plugins
 ---@field nvim_mini_mini_icons? boolean Enable Mini Icons
 ---@field nvim_mini_mini_diff? boolean Enable Mini Diff
@@ -205,7 +205,7 @@ local base16_alias_map = {
 ---@field folke_flash_nvim? boolean Enable Flash
 ---@field lewis6991_gitsigns_nvim? boolean Enable Git Signs
 
----@alias Base16.Group.Raw
+---@alias Base16ProMax.Group.Raw
 ---| '"base00"' # Default background (Semantic Alias: bg)
 ---| '"base01"' # Lighter Background (Used for status bars) (Semantic Alias: bg_dim)
 ---| '"base02"' # Selection background (Semantic Alias: bg_light)
@@ -223,23 +223,23 @@ local base16_alias_map = {
 ---| '"base0E"' # Keywords, Storage, Selector, Markup Italic, Diff Changed (Semantic Alias: purple)
 ---| '"base0F"' # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> (Semantic Alias: brown)
 
----@alias Base16.Group.Alias
----| '"bg"' # Default background (Raw Base16: base00)
----| '"bg_dim"' # Lighter Background (Used for status bars) (Raw Base16: base01)
----| '"bg_light"' # Selection background (Raw Base16: base02)
----| '"fg_dim"' # Comments, Invisibles, Line Highlighting (Raw Base16: base03)
----| '"fg_dark"' # Dark Foreground (Used for status bars) (Raw Base16: base04)
----| '"fg"' # Default Foreground, Caret, Delimiters, Operators (Raw Base16: base05)
----| '"fg_light"' # Light foreground (Raw Base16: base06)
----| '"fg_bright"' # The Lightest Foreground (Raw Base16: base07)
----| '"red"' # Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted (Raw Base16: base08)
----| '"orange"' # Integers, Boolean, Constants, XML Attributes, Markup Link Url (Raw Base16: base09)
----| '"yellow"' # Classes, Markup Bold, Search Text Background (Raw Base16: base0A)
+---@alias Base16ProMax.Group.Alias
+---| '"bg"' # Default background (Raw Base16ProMax: base00)
+---| '"bg_dim"' # Lighter Background (Used for status bars) (Raw Base16ProMax: base01)
+---| '"bg_light"' # Selection background (Raw Base16ProMax: base02)
+---| '"fg_dim"' # Comments, Invisibles, Line Highlighting (Raw Base16ProMax: base03)
+---| '"fg_dark"' # Dark Foreground (Used for status bars) (Raw Base16ProMax: base04)
+---| '"fg"' # Default Foreground, Caret, Delimiters, Operators (Raw Base16ProMax: base05)
+---| '"fg_light"' # Light foreground (Raw Base16ProMax: base06)
+---| '"fg_bright"' # The Lightest Foreground (Raw Base16ProMax: base07)
+---| '"red"' # Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted (Raw Base16ProMax: base08)
+---| '"orange"' # Integers, Boolean, Constants, XML Attributes, Markup Link Url (Raw Base16ProMax: base09)
+---| '"yellow"' # Classes, Markup Bold, Search Text Background (Raw Base16ProMax: base0A)
 ---| '"green"' # Strings, Inherited Class, Markup Code, Diff Insert
----| '"cyan"' # Support, Regular Expressions, Escape Characters, Markup Quotes (Raw Base16: base0C)
----| '"blue"' # Functions, Methods, Attribute IDs, Headings (Raw Base16: base0D)
----| '"purple"' # Keywords, Storage, Selector, Markup Italic, Diff Changed (Raw Base16: base0E)
----| '"brown"' # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> (Raw Base16: base0F)
+---| '"cyan"' # Support, Regular Expressions, Escape Characters, Markup Quotes (Raw Base16ProMax: base0C)
+---| '"blue"' # Functions, Methods, Attribute IDs, Headings (Raw Base16ProMax: base0D)
+---| '"purple"' # Keywords, Storage, Selector, Markup Italic, Diff Changed (Raw Base16ProMax: base0E)
+---| '"brown"' # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> (Raw Base16ProMax: base0F)
 
 -- ------------------------------------------------------------------
 -- Utility
@@ -431,8 +431,8 @@ end
 
 ---@private
 ---Add semantic aliases to the raw colors
----@param raw_colors table<Base16.Group.Raw, string>
----@return table<Base16.Group.Alias, string>
+---@param raw_colors table<Base16ProMax.Group.Raw, string>
+---@return table<Base16ProMax.Group.Alias, string>
 function U.add_semantic_palette(raw_colors)
   return setmetatable({}, {
     __index = function(_, k)
@@ -469,7 +469,7 @@ end
 ---Get a color from the color groups
 ---@param group string The color group (e.g., "syntax", "states")
 ---@param key string The color key within the group
----@param c table<Base16.Group.Alias, string> The semantic color palette
+---@param c table<Base16ProMax.Group.Alias, string> The semantic color palette
 ---@return string color The resolved color
 function U.get_group_color(group, key, c)
   local color_group = M.config.color_groups[group]
@@ -545,7 +545,7 @@ end
 
 ---@private
 ---Validate color group color value (can be string or function)
----@param color Base16.Config.ColorGroups.Color The color value to validate
+---@param color Base16ProMax.Config.ColorGroups.Color The color value to validate
 ---@param group_name string The group name for error context
 ---@param key_name string The key name for error context
 ---@return boolean valid True if valid
@@ -584,7 +584,7 @@ function U.is_valid_color_group_color(color, group_name, key_name)
 end
 
 ---Get array of all base16 semantic aliases
----@return Base16.Group.Alias[]
+---@return Base16ProMax.Group.Alias[]
 function U.get_base16_aliases()
   if not _base16_aliases then
     _base16_aliases = vim.tbl_keys(base16_alias_map)
@@ -594,7 +594,7 @@ function U.get_base16_aliases()
 end
 
 ---Get array of all base16 raw color names
----@return Base16.Group.Raw[]
+---@return Base16ProMax.Group.Raw[]
 function U.get_base16_raw()
   if not _base16_raw then
     -- Create sorted list of unique raw values
@@ -658,7 +658,7 @@ end
 -- ------------------------------------------------------------------
 
 ---Validate colors configuration
----@param colors table<Base16.Group.Raw, string> Colors configuration
+---@param colors table<Base16ProMax.Group.Raw, string> Colors configuration
 ---@return boolean valid True if valid
 ---@return table<string, string> errors Map of error keys to messages
 function V.validate_colors(colors)
@@ -701,7 +701,7 @@ function V.validate_colors(colors)
 end
 
 ---Validate styles configuration
----@param styles Base16.Config.Styles Styles configuration
+---@param styles Base16ProMax.Config.Styles Styles configuration
 ---@return boolean valid True if valid
 ---@return table<string, string> errors Map of error keys to messages
 function V.validate_styles(styles)
@@ -774,7 +774,7 @@ function V.validate_styles(styles)
 end
 
 ---Validate plugins configuration
----@param plugins Base16.Config.Plugins Plugins configuration
+---@param plugins Base16ProMax.Config.Plugins Plugins configuration
 ---@return boolean valid True if valid
 ---@return table<string, string> errors Map of error keys to messages
 function V.validate_plugins(plugins)
@@ -827,7 +827,7 @@ function V.validate_plugins(plugins)
     end
     if not is_known and key ~= "enable_all" then
       -- This is just a warning, not an error
-      vim.notify("Base16: Unknown plugin: " .. key, vim.log.levels.WARN)
+      vim.notify("Base16ProMax: Unknown plugin: " .. key, vim.log.levels.WARN)
     end
   end
 
@@ -835,7 +835,7 @@ function V.validate_plugins(plugins)
 end
 
 ---Validate color groups configuration
----@param color_groups Base16.Config.ColorGroups Color groups configuration
+---@param color_groups Base16ProMax.Config.ColorGroups Color groups configuration
 ---@return boolean valid True if valid
 ---@return table<string, string> errors Map of error keys to messages
 function V.validate_color_groups(color_groups)
@@ -1031,7 +1031,7 @@ function V.validate_before_highlight(before_highlight)
 end
 
 ---Validate entire configuration
----@param config Base16.Config The configuration to validate
+---@param config Base16ProMax.Config The configuration to validate
 ---@return boolean valid True if all validation passes
 ---@return table<string, string> errors Map of error keys to messages
 ---@return table<string, string> warnings Map of warning keys to messages
@@ -1094,7 +1094,7 @@ function V.format_errors(errors, warnings)
   local lines = {}
 
   if next(errors) then
-    table.insert(lines, "Base16 Configuration Errors:")
+    table.insert(lines, "Base16ProMax Configuration Errors:")
     for key, message in pairs(errors) do
       table.insert(lines, "  • " .. key .. ": " .. message)
     end
@@ -1104,7 +1104,7 @@ function V.format_errors(errors, warnings)
     if next(errors) then
       table.insert(lines, "")
     end
-    table.insert(lines, "Base16 Configuration Warnings:")
+    table.insert(lines, "Base16ProMax Configuration Warnings:")
     for key, message in pairs(warnings) do
       table.insert(lines, "  • " .. key .. ": " .. message)
     end
@@ -1120,7 +1120,7 @@ end
 ---@private
 ---Setup editor highlights (UI elements)
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_editor_hl(highlights, c)
   -- Normal and floating windows
   highlights.Normal = {
@@ -1214,7 +1214,7 @@ end
 ---@private
 ---Setup popup menu highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_popup_hl(highlights, c)
   highlights.Pmenu = {
     fg = U.get_group_color("foregrounds", "normal", c),
@@ -1245,7 +1245,7 @@ end
 ---@private
 ---Setup status and tab line highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_statusline_hl(highlights, c)
   -- Tabline
   highlights.TabLine = {
@@ -1273,7 +1273,7 @@ end
 ---@private
 ---Setup message highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_message_hl(highlights, c)
   highlights.ErrorMsg = {
     fg = U.get_group_color("states", "error", c),
@@ -1292,7 +1292,7 @@ end
 ---@private
 ---Setup diff highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_diff_hl(highlights, c)
   highlights.DiffAdd = { fg = U.get_group_color("diff", "added", c) }
   highlights.DiffChange = { fg = U.get_group_color("diff", "changed", c) }
@@ -1303,7 +1303,7 @@ end
 ---@private
 ---Setup spelling highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_spelling_hl(highlights, c)
   highlights.SpellBad = { sp = U.get_group_color("states", "error", c), undercurl = true }
   highlights.SpellCap = { sp = U.get_group_color("states", "info", c), undercurl = true }
@@ -1314,7 +1314,7 @@ end
 ---@private
 ---Setup syntax highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_syntax_hl(highlights, c)
   -- Comments
   highlights.Comment = {
@@ -1409,7 +1409,7 @@ end
 ---@private
 ---Setup treesitter highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_treesitter_hl(highlights, c)
   -- Variables
   highlights["@variable"] = { fg = U.get_group_color("syntax", "variable", c) }
@@ -1573,7 +1573,7 @@ end
 ---@private
 ---Setup markdown highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_markdown_hl(highlights, c)
   -- Markdown headings with consistent color progression
   local heading_colors = {
@@ -1637,7 +1637,7 @@ end
 ---@private
 ---Setup diagnostics highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_diagnostics_hl(highlights, c)
   -- Diagnostic messages
   highlights.DiagnosticError = {
@@ -1771,7 +1771,7 @@ end
 ---@private
 ---Setup LSP highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_lsp_hl(highlights, c)
   highlights.LspReferenceText = { bg = U.get_group_color("backgrounds", "light", c) }
   highlights.LspReferenceRead = { bg = U.get_group_color("backgrounds", "light", c) }
@@ -1781,7 +1781,7 @@ end
 ---@private
 ---Setup terminal highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_terminal_hl(highlights, c)
   highlights.Terminal = {
     fg = U.get_group_color("foregrounds", "normal", c),
@@ -1800,7 +1800,7 @@ end
 ---@private
 ---Setup floating window highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_float_hl(highlights, c)
   highlights.FloatBorder = {
     fg = U.get_group_color("foregrounds", "dim", c),
@@ -1828,7 +1828,7 @@ end
 ---@private
 ---Setup plugin integration highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_integration_hl(highlights, c)
   -- Mini Icons
   if U.has_plugin("nvim_mini_mini_icons") then
@@ -2092,7 +2092,7 @@ end
 
 ---@private
 ---Pre-compute highlights
----@param c table<Base16.Group.Alias, string>
+---@param c table<Base16ProMax.Group.Alias, string>
 ---@return table<string, vim.api.keyset.highlight>
 local function compute_highlights(c)
   if _computed_highlights_cache then
@@ -2218,10 +2218,10 @@ end
 -- Public API
 -- ------------------------------------------------------------------
 
----@type Base16.Config
+---@type Base16ProMax.Config
 M.config = {}
 
----@type Base16.Config
+---@type Base16ProMax.Config
 local default_config = {
   colors = {},
   highlight_groups = {},
@@ -2320,13 +2320,13 @@ local default_config = {
   },
 }
 
----@mod base16.setup Setup
+---@mod base16-pro-max.setup Setup
 
----Setup the base16 plugin
----@param user_config? Base16.Config
+---Setup the base16-pro-max.nvim plugin
+---@param user_config? Base16ProMax.Config
 ---@return nil
 ---@usage [[
----require("base16").setup({
+---require("base16-pro-max").setup({
 ---  colors = { base00 = "#1f1f28", base01 = "#2a2a37", ... }
 ---})
 ---@usage ]]
@@ -2349,10 +2349,10 @@ function M.setup(user_config)
     local error_msg = V.format_errors(errors, {})
 
     -- Show detailed error message
-    vim.notify("Base16 setup failed:\n" .. error_msg, vim.log.levels.ERROR)
+    vim.notify("base16-pro-max.nvim setup failed:\n" .. error_msg, vim.log.levels.ERROR)
 
     -- Don't proceed with invalid configuration
-    error("Base16: Invalid configuration. See above for details.")
+    error("base16-pro-max.nvim: Invalid configuration. See above for details.")
   end
 
   M.config = vim.tbl_deep_extend("force", default_config, user_config or {})
@@ -2389,8 +2389,8 @@ function M.setup(user_config)
   -- Show runtime errors if any
   if next(runtime_errors) then
     local error_msg = V.format_errors(runtime_errors, {})
-    vim.notify("Base16 runtime validation failed:\n" .. error_msg, vim.log.levels.ERROR)
-    error("Base16: Runtime validation failed. See above for details.")
+    vim.notify("base16-pro-max.nvim runtime validation failed:\n" .. error_msg, vim.log.levels.ERROR)
+    error("base16-pro-max.nvim: Runtime validation failed. See above for details.")
   end
 
   did_setup = true
@@ -2398,11 +2398,11 @@ function M.setup(user_config)
   M._invalidate_cache()
 end
 
----@mod base16.api API
+---@mod base16-pro-max.api API
 
 ---Setup the colorscheme
 ---@usage [[
----vim.cmd.colorscheme("base16")
+---vim.cmd.colorscheme("base16-pro-max")
 ---@usage ]]
 function M.colorscheme()
   -- Clear existing highlights
@@ -2416,15 +2416,15 @@ function M.colorscheme()
 end
 
 ---Get the semantic color palette
----@return table<Base16.Group.Alias, string>|nil colors The semantic color palette, or nil if not set up
+---@return table<Base16ProMax.Group.Alias, string>|nil colors The semantic color palette, or nil if not set up
 function M.colors()
   if not did_setup then
-    vim.notify("Base16: Plugin not set up. Call setup() first.", vim.log.levels.ERROR)
+    vim.notify("base16-pro-max.nvim: Plugin not set up. Call setup() first.", vim.log.levels.ERROR)
     return nil
   end
 
   if not M.config.colors then
-    vim.notify("Base16: No colors configured.", vim.log.levels.ERROR)
+    vim.notify("base16-pro-max.nvim: No colors configured.", vim.log.levels.ERROR)
     return nil
   end
 
@@ -2439,7 +2439,7 @@ function M.colors()
 end
 
 ---Get a specific color by name
----@param name Base16.Group.Alias|Base16.Group.Raw Color name (e.g., "red", "bg", "base08")
+---@param name Base16ProMax.Group.Alias|Base16ProMax.Group.Raw Color name (e.g., "red", "bg", "base08")
 ---@return string|nil color The hex color value, or nil if not found
 function M.get_color(name)
   local colors = M.colors()
@@ -2450,7 +2450,7 @@ function M.get_color(name)
 end
 
 ---Get multiple colors at once
----@param names Base16.Group.Alias[]|Base16.Group.Raw[] Array of color names
+---@param names Base16ProMax.Group.Alias[]|Base16ProMax.Group.Raw[] Array of color names
 ---@return table<string, string> colors Map of color names to hex values
 function M.get_colors(names)
   local colors = M.colors()
@@ -2471,7 +2471,7 @@ function M.get_colors(names)
 end
 
 ---Get all raw base16 colors
----@return table<Base16.Group.Raw, string>|nil colors The raw base16 colors, or nil if not set up
+---@return table<Base16ProMax.Group.Raw, string>|nil colors The raw base16 colors, or nil if not set up
 function M.raw_colors()
   if not did_setup or not M.config.colors then
     return nil
@@ -2486,7 +2486,7 @@ function M.raw_colors()
 end
 
 ---Get semantic color mapping
----@return table<Base16.Group.Alias, Base16.Group.Raw> mapping The semantic to raw color mapping
+---@return table<Base16ProMax.Group.Alias, Base16ProMax.Group.Raw> mapping The semantic to raw color mapping
 function M.color_mapping()
   return vim.deepcopy(base16_alias_map)
 end
@@ -2527,7 +2527,7 @@ function M._invalidate_cache()
 end
 
 ---Validate color configuration
----@param colors table<Base16.Group.Raw, string> The colors to validate
+---@param colors table<Base16ProMax.Group.Raw, string> The colors to validate
 ---@return boolean valid True if all required colors are present
 ---@return string[] missing Array of missing color keys
 function M.validate_colors(colors)
