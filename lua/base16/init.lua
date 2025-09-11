@@ -117,7 +117,7 @@ local base16_alias_map = {
 ---@field git? Base16.Config.ColorGroups.Git Git colors
 ---@field search? Base16.Config.ColorGroups.Search Search colors
 
----@alias Base16.Config.ColorGroups.Color string|fun(c: table<Base16.Group.Alias, string>): string
+---@alias Base16.Config.ColorGroups.Color string|fun(c: table<Base16.Group.Alias, string>, blend_fn: function): string
 
 ---@class Base16.Config.ColorGroups.Backgrounds
 ---@field normal? Base16.Config.ColorGroups.Color Normal background
@@ -251,8 +251,8 @@ function U.color_to_rgb(color)
     return bit.band(bit.rshift(value, offset), 0xFF)
   end
 
-  local new_color = vim.api.nvim_get_color_by_name(color)
-  if new_color == -1 then
+  local new_color_ok, new_color = pcall(vim.api.nvim_get_color_by_name, color)
+  if not new_color_ok or new_color == -1 then
     new_color = vim.opt.background:get() == "dark" and 000 or 255255255
   end
 
@@ -372,7 +372,10 @@ end
 ---@param alpha number Between 0 (background) and 1 (foreground)
 ---@return string blended_color The blended color as hex
 function U.blend(fg, bg, alpha)
-  local cache_key = fg .. bg .. alpha
+  local cache_key = string.format("%s%s%s", fg, bg, alpha)
+  if not cache_key then
+    return "NONE"
+  end
   if not _blend_cache then
     _blend_cache = {}
   end
@@ -458,7 +461,7 @@ function U.get_group_color(group, key, c)
 
   local color_value = color_group[key]
   if type(color_value) == "function" then
-    return color_value(c)
+    return color_value(c, U.blend)
   else
     return c[color_value]
   end
@@ -2210,11 +2213,11 @@ local default_config = {
       dim = "bg_dim",
       light = "bg_light",
       selection = "bg_light",
-      cursor_line = function(c)
-        return U.blend(c.bg_light, c.bg, 0.6)
+      cursor_line = function(c, blend_fn)
+        return blend_fn(c.bg_light, c.bg, 0.6)
       end,
-      cursor_column = function(c)
-        return U.blend(c.bg_dim, c.bg, 0.3)
+      cursor_column = function(c, blend_fn)
+        return blend_fn(c.bg_dim, c.bg, 0.3)
       end,
     },
 
@@ -2226,8 +2229,8 @@ local default_config = {
       light = "fg_light",
       bright = "fg_bright",
       comment = "fg_dark",
-      line_number = function(c)
-        return U.blend(c.fg_dim, c.bg, 0.7)
+      line_number = function(c, blend_fn)
+        return blend_fn(c.fg_dim, c.bg, 0.7)
       end,
     },
 
@@ -2334,7 +2337,7 @@ function M.setup(user_config)
       if type(group_config) == "table" then
         for key, color_value in pairs(group_config) do
           if type(color_value) == "function" then
-            local success, result = pcall(color_value, test_colors)
+            local success, result = pcall(color_value, test_colors, U.blend)
             if not success then
               runtime_errors["color_groups." .. group_name .. "." .. key] = "Function failed: " .. tostring(result)
             elseif type(result) ~= "string" then
