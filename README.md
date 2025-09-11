@@ -3,7 +3,9 @@
 Base16 for modern Neovim — not just colors.
 
 > Most Base16 plugins stop at 16 colors + syntax.
+
 > base16.nvim goes beyond: transparency, dimmed inactive panes, semantic aliases, live blends, overrides, and first-class plugin integrations.
+
 > Paste any Base16 palette (Rose-pine, Catppuccin, Tokyo Night…) and instantly get a fully-featured, modern theme—no extra themes, no hacks, no switching plugins.
 
 ## 🌈 Why base16.nvim is different
