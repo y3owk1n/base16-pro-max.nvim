@@ -781,6 +781,7 @@ function V.validate_plugins(plugins)
     "magicduck_grug_far_nvim",
     "folke_which_key_nvim",
     "folke_flash_nvim",
+    "lewis6991_gitsigns_nvim",
   }
 
   for key, value in pairs(plugins) do
