@@ -114,6 +114,7 @@ local base16_alias_map = {
 ---@field syntax? Base16.Config.ColorGroups.Syntax Syntax colors
 ---@field states? Base16.Config.ColorGroups.States Semantic colors
 ---@field diff? Base16.Config.ColorGroups.Diff Diff colors
+---@field git? Base16.Config.ColorGroups.Git Git colors
 ---@field search? Base16.Config.ColorGroups.Search Search colors
 
 ---@alias Base16.Config.ColorGroups.Color string|fun(c: table<Base16.Group.Alias, string>): string
@@ -162,6 +163,12 @@ local base16_alias_map = {
 ---@field changed? Base16.Config.ColorGroups.Color Changed foreground
 ---@field text? Base16.Config.ColorGroups.Color Text foreground
 
+---@class Base16.Config.ColorGroups.Git
+---@field added? Base16.Config.ColorGroups.Color Added foreground
+---@field removed? Base16.Config.ColorGroups.Color Removed foreground
+---@field changed? Base16.Config.ColorGroups.Color Changed foreground
+---@field untracked? Base16.Config.ColorGroups.Color Untracked foreground
+
 ---@class Base16.Config.ColorGroups.Search
 ---@field match? Base16.Config.ColorGroups.Color Match foreground
 ---@field current? Base16.Config.ColorGroups.Color Current match foreground
@@ -193,6 +200,7 @@ local base16_alias_map = {
 ---@field magicduck_grug_far_nvim? boolean Enable Grug Far
 ---@field folke_which_key_nvim? boolean Enable Which Key
 ---@field folke_flash_nvim? boolean Enable Flash
+---@field lewis6991_gitsigns_nvim? boolean Enable Git Signs
 
 ---@alias Base16.Group.Raw
 ---| '"base00"' # Default background (Semantic Alias: bg)
@@ -2040,6 +2048,24 @@ local function setup_integration_hl(highlights, c)
       bg = U.get_group_color("states", "error", c),
     }
   end
+
+  -- Gitsigns
+  if U.has_plugin("lewis6991_gitsigns_nvim") then
+    highlights.GitSignsAdd = { fg = U.get_group_color("git", "added", c) }
+    highlights.GitSignsChange = { fg = U.get_group_color("git", "changed", c) }
+    highlights.GitSignsDelete = { fg = U.get_group_color("git", "removed", c) }
+    highlights.GitSignsUntracked = { fg = U.get_group_color("git", "untracked", c) }
+
+    highlights.GitSignsAddLn = { link = "GitSignsAdd" }
+    highlights.GitSignsChangeLn = { link = "GitSignsChange" }
+    highlights.GitSignsDeleteLn = { link = "GitSignsDelete" }
+    highlights.GitSignsUntrackedLn = { link = "GitSignsUntracked" }
+
+    highlights.GitSignsAddInline = { link = "GitSignsAdd" }
+    highlights.GitSignsChangeInline = { link = "GitSignsChange" }
+    highlights.GitSignsDeleteInline = { link = "GitSignsDelete" }
+    highlights.GitSignsUntrackedInline = { link = "GitSignsUntracked" }
+  end
 end
 
 ---@private
@@ -2235,6 +2261,14 @@ local default_config = {
       removed = "red",
       changed = "orange",
       text = "blue",
+    },
+
+    -- Git colors
+    git = {
+      added = "green",
+      removed = "red",
+      changed = "orange",
+      untracked = "brown",
     },
 
     -- Search and selection
