@@ -182,6 +182,12 @@ require("base16").setup({
       changed = "orange",
       text = "blue",
     },
+    git = {
+      added = "green",
+      removed = "red",
+      changed = "orange",
+      untracked = "brown",
+    },
     search = {
       match = "yellow",
       current = "orange",
