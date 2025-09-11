@@ -69,7 +69,7 @@ Base16.Config.ColorGroups                            *Base16.Config.ColorGroups*
 Base16.Config.ColorGroups.Color                *Base16.Config.ColorGroups.Color*
 
     Type: ~
-        string|fun(c:table<Base16.Group.Alias,string>):string
+        string|fun(c:table<Base16.Group.Alias,string>,blend_fn:function):string
 
 
 Base16.Config.ColorGroups.Backgrounds    *Base16.Config.ColorGroups.Backgrounds*
