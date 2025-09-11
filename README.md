@@ -476,26 +476,26 @@ The plugin is structured in several key modules:
 ### Adding Plugin Support
 
 1. Add plugin option to `Base16.Config.Plugins` type
-2. Create highlight function in `setup_integration_hl`
-3. Use `U.has_plugin()` to check if integration should be applied
-4. Follow existing patterns for consistent styling
-5. Test with actual plugin usage
-6. Submit pull request with documentation
+2. Add the plugin into `known_plugins` in `V.validate_plugins` function
+3. Create highlight function in `setup_integration_hl`
+4. Use `U.has_plugin()` to check if integration should be applied
+5. Do not specify colors directly in highlight groups, add the colors to `default_config.color_groups` instead and use it.
+6. Follow existing patterns for consistent styling
+7. Test with actual plugin usage
+8. Submit pull request with documentation
 
 ### Color Group Architecture
 
 The plugin uses a hierarchical color system:
 
 ```
-
 Base16 Raw Colors (base00-base0F)
-↓
+   ↓
 Semantic Aliases (bg, fg, red, blue, etc.)
-↓
+   ↓
 Color Groups (backgrounds, syntax, states, etc.)
-↓
+   ↓
 Highlight Groups (Normal, Function, Error, etc.)
-
 ```
 
 This allows for consistent theming while maintaining flexibility.
