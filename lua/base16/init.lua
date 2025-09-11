@@ -69,6 +69,9 @@ local _cterm_cache = nil
 ---@type table<string, integer|"NONE">
 local _hex_to_cterm_cache = {}
 
+---@type table<string, vim.api.keyset.highlight>|nil
+local _computed_highlights_cache = nil
+
 -- ------------------------------------------------------------------
 -- Constants
 -- ------------------------------------------------------------------
@@ -2088,21 +2091,13 @@ local function setup_integration_hl(highlights, c)
 end
 
 ---@private
----Apply all highlights
----@return nil
-local function apply_highlights()
-  local raw = M.config.colors or {}
-
-  -- Validate that all required colors are provided
-  local required_colors = _base16_raw or U.get_base16_raw()
-
-  for _, color in ipairs(required_colors) do
-    if not raw[color] then
-      error("Missing color: " .. color .. ". Please provide all base16 colors in setup()")
-    end
+---Pre-compute highlights
+---@param c table<Base16.Group.Alias, string>
+---@return table<string, vim.api.keyset.highlight>
+local function compute_highlights(c)
+  if _computed_highlights_cache then
+    return _computed_highlights_cache
   end
-
-  local c = U.add_semantic_palette(raw)
 
   ---@type table<string, vim.api.keyset.highlight>
   local highlights = {}
@@ -2122,6 +2117,30 @@ local function apply_highlights()
   setup_terminal_hl(highlights, c)
   setup_float_hl(highlights, c)
   setup_integration_hl(highlights, c)
+
+  _computed_highlights_cache = highlights
+
+  return highlights
+end
+
+---@private
+---Apply all highlights
+---@return nil
+local function apply_highlights()
+  local raw = M.config.colors or {}
+
+  -- Validate that all required colors are provided
+  local required_colors = _base16_raw or U.get_base16_raw()
+
+  for _, color in ipairs(required_colors) do
+    if not raw[color] then
+      error("Missing color: " .. color .. ". Please provide all base16 colors in setup()")
+    end
+  end
+
+  local c = U.add_semantic_palette(raw)
+
+  local highlights = compute_highlights(c)
 
   -- Apply custom highlights from user configuration
   if M.config.highlight_groups and next(M.config.highlight_groups) then
@@ -2154,11 +2173,13 @@ local function apply_highlights()
     end
   end
 
+  local before_highlight_fn = M.config.before_highlight
+
   -- Apply all highlights with blend processing
   for group, opts in pairs(highlights) do
     -- Call before_highlight hook if provided
-    if M.config.before_highlight then
-      M.config.before_highlight(group, opts, c)
+    if before_highlight_fn then
+      before_highlight_fn(group, opts, c)
     end
 
     -- Process blend values
