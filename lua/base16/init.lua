@@ -63,7 +63,7 @@ local _base16_raw = nil
 ---@type table<string, string>|nil
 local _color_cache = nil
 
----@type table<number, { r: integer, g: integer, b: integer }>
+---@type table<number, { r: integer, g: integer, b: integer }>|nil
 local _cterm_cache = nil
 
 ---@type table<string, integer|"NONE">
@@ -2515,8 +2515,15 @@ end
 ---Invalidate the color cache (useful when colors are updated)
 ---@private
 function M._invalidate_cache()
+  if not did_setup then
+    return
+  end
+
   _color_cache = nil
   _blend_cache = nil
+  _cterm_cache = nil
+  _hex_to_cterm_cache = {}
+  _computed_highlights_cache = nil
 end
 
 ---Validate color configuration
