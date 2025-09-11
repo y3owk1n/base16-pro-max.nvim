@@ -1,7 +1,7 @@
 doc:
     vimcats  \
-    lua/base16/init.lua \
-    > doc/base16.nvim.txt
+    lua/base16-pro-max/init.lua \
+    > doc/base16-pro-max.nvim.txt
 
 set shell := ["bash", "-cu"]
 
