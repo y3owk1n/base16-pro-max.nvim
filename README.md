@@ -529,6 +529,7 @@ We welcome contributions! Here's how to get started:
 - **Plugin integrations**: Support for additional Neovim plugins
 - **Documentation**: Examples, tutorials, migration guides
 - **Testing**: Automated testing, edge case coverage
+- **Features**: Features that are common for theme plugins (e.g., dimmed inactive panes and more)
 - **Performance**: Optimization improvements
 
 ## License
