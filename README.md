@@ -215,8 +215,8 @@ require("base16").setup({
       dim = "bg_dim",
       light = "bg_light",
       selection = "bg_light",
-      cursor_line = function(c) return U.blend(c.bg_light, c.bg, 0.6) end,
-      cursor_column = function(c) return U.blend(c.bg_dim, c.bg, 0.3) end,
+      cursor_line = function(c, blend_fn) return blend_fn(c.bg_light, c.bg, 0.6) end,
+      cursor_column = function(c, blend_fn) return blend_fn(c.bg_dim, c.bg, 0.3) end,
     },
     foregrounds = {
       normal = "fg",
@@ -225,7 +225,7 @@ require("base16").setup({
       light = "fg_light",
       bright = "fg_bright",
       comment = "fg_dark",
-      line_number = function(c) return U.blend(c.fg_dim, c.bg, 0.7) end,
+      line_number = function(c, blend_fn) return blend_fn(c.fg_dim, c.bg, 0.7) end,
     },
     syntax = {
       variable = "fg",
@@ -313,13 +313,9 @@ require("base16").setup({
       function_name = "cyan", -- Use semantic alias
       operater = "base0A",    -- Use raw base16 color
       -- Use a custom function for comments
-      comment = function(c)
-        return blend(c.fg_dim, c.bg, 0.8)
+      comment = function(c, blend_fn)
+        return blend_fn(c.fg_dim, c.bg, 0.8)
       end,
-    },
-    states = {
-      -- Custom error color
-      error = "#ff6b6b",
     },
   },
 })
