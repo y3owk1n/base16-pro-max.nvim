@@ -69,6 +69,14 @@ Base16ProMax.Config                                        *Base16ProMax.Config*
         {before_highlight?}  (fun(group:string,opts:vim.api.keyset.highlight,c:table<Base16ProMax.Group.Alias,string>):nil)  Callback to run before setting highlight groups
         {plugins?}           (Base16ProMax.Config.Plugins)                                                                   Enable/disable plugins
         {color_groups?}      (Base16ProMax.Config.ColorGroups)                                                               Color groups to override
+        {setup_globals?}     (Base16ProMax.Config.SetupGlobals)                                                              Setup globals
+
+
+Base16ProMax.Config.SetupGlobals              *Base16ProMax.Config.SetupGlobals*
+
+    Fields: ~
+        {terminal_colors?}    (boolean)  Set terminal colors
+        {base16_gui_colors?}  (boolean)  Set base16 gui colors
 
 
 Base16ProMax.Config.ColorGroups                *Base16ProMax.Config.ColorGroups*
@@ -273,6 +281,7 @@ All boolean options are `false` and opt-in by default.
  - before_highlight: *Optional* - callback to run before setting highlight groups
  - styles: *Optional* - styling options
  - plugins: *Optional* - enable/disable plugins
+ - setup_globals: *Optional* - setup vim.g globals
  - color_groups: *Optional* - semantic color groups
 
 # Colors Table ~
@@ -342,6 +351,10 @@ automatically validate that all required colors are provided.
      },
      plugins = {
        enable_all = false,
+     },
+     setup_globals = {
+       terminal_colors = false, -- set vim.g.terminal_color_* variables
+       base16_gui_colors = false, -- set vim.g.base16_gui* variables
      },
      color_groups = {
        -- Background variations
