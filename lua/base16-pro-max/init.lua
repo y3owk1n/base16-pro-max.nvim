@@ -423,7 +423,7 @@ end
 function U.has_plugin(name)
   local plugin = M.config.plugins[name]
 
-  if not plugin then
+  if plugin == nil then
     return M.config.plugins.enable_all or false
   end
 
