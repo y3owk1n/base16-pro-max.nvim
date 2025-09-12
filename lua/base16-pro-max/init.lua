@@ -199,6 +199,7 @@ local base16_alias_map = {
 ---@field nvim_mini_mini_pick? boolean Enable Mini Pick
 ---@field meandering_programmer_render_markdown_nvim? boolean Enable Render Markdown
 ---@field y3owk1n_undo_glow_nvim? boolean Enable Undo Glow
+---@field y3owk1n_time_machine_nvim? boolean Enable Time Machine
 ---@field saghen_blink_cmp? boolean Enable Blink Cmp
 ---@field magicduck_grug_far_nvim? boolean Enable Grug Far
 ---@field folke_which_key_nvim? boolean Enable Which Key
@@ -798,6 +799,7 @@ function V.validate_plugins(plugins)
     "nvim_mini_mini_pick",
     "meandering_programmer_render_markdown_nvim",
     "y3owk1n_undo_glow_nvim",
+    "y3owk1n_time_machine_nvim",
     "saghen_blink_cmp",
     "magicduck_grug_far_nvim",
     "folke_which_key_nvim",
@@ -1826,10 +1828,10 @@ local function setup_float_hl(highlights, c)
 end
 
 ---@private
----Setup plugin integration highlights
+---Setup plugin highlights
 ---@param highlights table<string, vim.api.keyset.highlight>
 ---@param c table<Base16ProMax.Group.Alias, string>
-local function setup_integration_hl(highlights, c)
+local function setup_plugins_hl(highlights, c)
   -- Mini Icons
   if U.has_plugin("nvim_mini_mini_icons") then
     highlights.MiniIconsAzure = { fg = U.get_group_color("syntax", "operator", c) }
@@ -1952,6 +1954,38 @@ local function setup_integration_hl(highlights, c)
       blend = M.config.styles.blends.strong,
     }
     highlights.UgCursor = { bg = U.get_group_color("backgrounds", "light", c) }
+  end
+
+  -- Time Machine
+  if U.has_plugin("y3owk1n_time_machine_nvim") then
+    highlights.TimeMachineNormal = {
+      link = "Normal",
+    }
+    highlights.TimeMachineBorder = {
+      link = "FloatBorder",
+    }
+    highlights.TimeMachineCurrent = {
+      bg = U.get_group_color("states", "info", c),
+      blend = M.config.styles.blends.medium,
+    }
+    highlights.TimeMachineTimeline = {
+      fg = U.get_group_color("states", "info", c),
+    }
+    highlights.TimeMachineTimelineAlt = {
+      fg = U.get_group_color("foregrounds", "dark", c),
+    }
+    highlights.TimeMachineKeymap = {
+      fg = U.get_group_color("states", "hint", c),
+    }
+    highlights.TimeMachineSeq = {
+      fg = U.get_group_color("states", "error", c),
+    }
+    highlights.TimeMachineTag = {
+      fg = U.get_group_color("states", "warning", c),
+    }
+    highlights.TimeMachineInfo = {
+      fg = U.get_group_color("foregrounds", "dark", c),
+    }
   end
 
   -- Blink Cmp
@@ -2116,7 +2150,7 @@ local function compute_highlights(c)
   setup_lsp_hl(highlights, c)
   setup_terminal_hl(highlights, c)
   setup_float_hl(highlights, c)
-  setup_integration_hl(highlights, c)
+  setup_plugins_hl(highlights, c)
 
   _computed_highlights_cache = highlights
 

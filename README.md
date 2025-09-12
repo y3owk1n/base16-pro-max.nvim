@@ -475,9 +475,9 @@ The plugin is structured in several key modules:
 
 1. Add plugin option to `Base16.Config.Plugins` type
 2. Add the plugin into `known_plugins` in `V.validate_plugins` function
-3. Create highlight function in `setup_integration_hl`
+3. Create highlight function in `setup_plugins_hl`
 4. Use `U.has_plugin()` to check if integration should be applied
-5. Do not specify colors directly in highlight groups, add the colors to `default_config.color_groups` instead and use it.
+5. Do not specify colors directly in highlight groups, add the colors to `default_config.color_groups` instead if really needed and use it.
 6. Follow existing patterns for consistent styling
 7. Test with actual plugin usage
 8. Submit pull request with documentation
