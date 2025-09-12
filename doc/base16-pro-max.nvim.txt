@@ -180,6 +180,7 @@ Base16ProMax.Config.Plugins                        *Base16ProMax.Config.Plugins*
         {nvim_mini_mini_pick?}                         (boolean)  Enable Mini Pick
         {meandering_programmer_render_markdown_nvim?}  (boolean)  Enable Render Markdown
         {y3owk1n_undo_glow_nvim?}                      (boolean)  Enable Undo Glow
+        {y3owk1n_time_machine_nvim?}                   (boolean)  Enable Time Machine
         {saghen_blink_cmp?}                            (boolean)  Enable Blink Cmp
         {magicduck_grug_far_nvim?}                     (boolean)  Enable Grug Far
         {folke_which_key_nvim?}                        (boolean)  Enable Which Key
