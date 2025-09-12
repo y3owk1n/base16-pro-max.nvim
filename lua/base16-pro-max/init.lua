@@ -2716,6 +2716,11 @@ function M.colorscheme()
   apply_highlights()
 end
 
+---Re-apply highlights (for benchmarking only)
+function M._reapply_highlights()
+  apply_highlights()
+end
+
 ---Get the semantic color palette
 ---@return table<Base16ProMax.Group.Alias, string>|nil colors The semantic color palette, or nil if not set up
 function M.colors()
