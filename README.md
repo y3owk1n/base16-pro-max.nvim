@@ -455,6 +455,7 @@ The current plugin integrations reflect my personal Neovim setup - these are the
 
 - Color caching should handle most cases automatically
 - If you modify colors frequently, call `require("base16")._invalidate_cache()` manually
+- There's a `bench.lua` script in the repo root that you can run with `nvim --headless -l ./bench.lua` to get the benchmark results.
 
 **Plugin integrations not working:**
 
