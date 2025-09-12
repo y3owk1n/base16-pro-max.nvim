@@ -1,4 +1,4 @@
-*base16-pro-max.nvim* Base16 colorscheme plugin
+*base16-pro-max.nvim* Base16 for modern Neovim — not just colors.
 
 base16-pro-max.nvim is a highly configurable colorscheme engine for Neovim that
 aims to not only covers base16 colorschemes, but also include features
@@ -8,7 +8,7 @@ blends, italics, custom highlights, etc.)
 It allows defining a semantic color palette, generating highlight
 groups automatically, and integrating with popular plugins.
 
-# Features: ~
+# Features ~
  - Complete Base16 Implementation: Full support for the Base16 specification with semantic aliases
  - Modern Styling Options: Transparency, italics, bold text, window dimming, and blend modes
  - Extensive Plugin Support: Native integrations for popular Neovim plugins
@@ -17,21 +17,38 @@ groups automatically, and integrating with popular plugins.
  - Performance Optimized: Efficient caching and minimal runtime overhead
  - Highly Customizable: Override any aspect through configuration or runtime functions
 
-# Usage: ~
+# Setup ~
+
+This module needs to be set up with `require('base16-pro-max').setup({})` (replace
+`{}` with your `config` table).
+
+see also |base16-pro-max.setup|
+
+# Quick Start ~
 
 >lua
-  require("base16-pro-max").setup({
-    colors = {
-      base00 = "#1f1f28", base01 = "#2a2a37", base02 = "#3a3a4e",
-      base03 = "#4e4e5e", base04 = "#9e9eaf", base05 = "#c5c5da",
-      base06 = "#dfdfef", base07 = "#e6e6f0", base08 = "#ff5f87",
-      base09 = "#ff8700", base0A = "#ffaf00", base0B = "#5fff87",
-      base0C = "#5fd7ff", base0D = "#5fafff", base0E = "#af87ff",
-      base0F = "#d7875f",
-    },
-  })
-  vim.cmd.colorscheme("base16-pro-max")
+   -- Minimal setup with Kanagawa-inspired colors
+   {
+     "y3owk1n/base16-pro-max.nvim",
+     priority = 1000,
+     config = function()
+       require("base16-pro-max").setup {
+         colors = {
+           base00 = "#1f1f28", base01 = "#2a2a37", base02 = "#3a3a4e",
+           base03 = "#4e4e5e", base04 = "#9e9eaf", base05 = "#c5c5da",
+           base06 = "#dfdfef", base07 = "#e6e6f0", base08 = "#ff5f87",
+           base09 = "#ff8700", base0A = "#ffaf00", base0B = "#5fff87",
+           base0C = "#5fd7ff", base0D = "#5fafff", base0E = "#af87ff",
+           base0F = "#d7875f",
+         },
+         styles = { italic = true, transparency = true },
+         plugins = { enable_all = true },
+       }
+       vim.cmd.colorscheme "base16-pro-max"
+     end,
+   }
 <
+
 
 ==============================================================================
 Table of Contents                                      *base16-pro-max.contents*
@@ -238,6 +255,173 @@ M.config                                                              *M.config*
 
 ==============================================================================
 Setup                                                     *base16-pro-max.setup*
+
+# Module setup ~
+
+Note that `colors` in the config table is compulsary and must be provided.
+
+>lua
+   require('base16').setup({}) -- replace {} with your config table
+<
+
+# Configuration Anotomy ~
+
+All boolean options are `false` and opt-in by default.
+
+ - colors: *Required* - the 16 Base 16 hex codes
+ - highlight_groups: *Optional* - additional highlight groups to set
+ - before_highlight: *Optional* - callback to run before setting highlight groups
+ - styles: *Optional* - styling options
+ - plugins: *Optional* - enable/disable plugins
+ - color_groups: *Optional* - semantic color groups
+
+# Colors Table ~
+
+The `colors` table is a mapping of Base16 colors to hex values. The plugin will
+automatically validate that all required colors are provided.
+
+>lua
+   {
+     base00 = "#000000", -- Default background
+     base01 = "#000000", -- Lighter background (status bars)
+     base02 = "#000000", -- Selection background
+     base03 = "#000000", -- Comments, line highlighting
+     base04 = "#000000", -- Dark foreground (status bars)
+     base05 = "#000000", -- Default foreground
+     base06 = "#000000", -- Light foreground
+     base07 = "#000000", -- Lightest foreground
+     base08 = "#000000", -- Red (variables, errors)
+     base09 = "#000000", -- Orange (integers, constants)
+     base0A = "#000000", -- Yellow (classes, search)
+     base0B = "#000000", -- Green (strings, success)
+     base0C = "#000000", -- Cyan (support, regex)
+     base0D = "#000000", -- Blue (functions, info)
+     base0E = "#000000", -- Purple (keywords, changes)
+     base0F = "#000000", -- Brown (deprecated)
+   }
+<
+
+# Semantic Alias Mapping ~
+
+ - base00 <-> bg
+ - base01 <-> bg_dim
+ - base02 <-> bg_light
+ - base03 <-> fg_dim
+ - base04 <-> fg_dark
+ - base05 <-> fg
+ - base06 <-> fg_light
+ - base07 <-> fg_bright
+ - base08 <-> red
+ - base09 <-> orange
+ - base0A <-> yellow
+ - base0B <-> green
+ - base0C <-> cyan
+ - base0D <-> blue
+ - base0E <-> purple
+ - base0F <-> brown
+
+# Default Configuration ~
+
+>lua
+   {
+     colors = {}, -- add this with your colors
+     highlight_groups = {},
+     before_highlight = nil,
+     styles = {
+       italic = false,
+       bold = false,
+       transparency = false,
+       use_cterm = false,
+       dim_inactive_windows = false,
+       blends = {
+         subtle = 10,
+         medium = 15,
+         strong = 25,
+         super = 50,
+       },
+     },
+     plugins = {
+       enable_all = false,
+     },
+     color_groups = {
+       -- Background variations
+       backgrounds = {
+         normal = "bg",
+         dim = "bg_dim",
+         light = "bg_light",
+         selection = "bg_light",
+         cursor_line = function(c, blend_fn)
+           return blend_fn(c.bg_light, c.bg, 0.6)
+         end,
+         cursor_column = function(c, blend_fn)
+           return blend_fn(c.bg_dim, c.bg, 0.3)
+         end,
+       },
+
+       -- Foreground variations
+       foregrounds = {
+         normal = "fg",
+         dim = "fg_dim",
+         dark = "fg_dark",
+         light = "fg_light",
+         bright = "fg_bright",
+         comment = "fg_dark",
+         line_number = function(c, blend_fn)
+           return blend_fn(c.fg_dim, c.bg, 0.7)
+         end,
+       },
+
+       -- Semantic colors for syntax
+       syntax = {
+         variable = "fg",
+         constant = "orange",
+         string = "green",
+         number = "orange",
+         boolean = "orange",
+         keyword = "purple",
+         function_name = "blue",
+         type = "yellow",
+         comment = "fg_dark",
+         operator = "cyan",
+         delimiter = "fg_dark",
+         deprecated = "brown",
+       },
+
+       -- UI state colors
+       states = {
+         error = "red",
+         warning = "yellow",
+         info = "blue",
+         hint = "cyan",
+         success = "green",
+       },
+
+       -- Diff colors
+       diff = {
+         added = "green",
+         removed = "red",
+         changed = "orange",
+         text = "blue",
+       },
+
+       -- Git colors
+       git = {
+         added = "green",
+         removed = "red",
+         changed = "orange",
+         untracked = "brown",
+       },
+
+       -- Search and selection
+       search = {
+         match = "yellow",
+         current = "orange",
+         incremental = "orange",
+       },
+     },
+   }
+<
+
 
 M.setup({user_config?})                                                *M.setup*
     Setup the base16-pro-max.nvim plugin
