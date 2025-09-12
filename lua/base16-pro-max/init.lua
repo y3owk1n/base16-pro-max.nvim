@@ -127,6 +127,11 @@ local base16_alias_map = {
 ---@field before_highlight? fun(group: string, opts: vim.api.keyset.highlight, c: table<Base16ProMax.Group.Alias, string>): nil Callback to run before setting highlight groups
 ---@field plugins? Base16ProMax.Config.Plugins Enable/disable plugins
 ---@field color_groups? Base16ProMax.Config.ColorGroups Color groups to override
+---@field setup_globals? Base16ProMax.Config.SetupGlobals Setup globals
+
+---@class Base16ProMax.Config.SetupGlobals
+---@field terminal_colors? boolean Set terminal colors
+---@field base16_gui_colors? boolean Set base16 gui colors
 
 ---@class Base16ProMax.Config.ColorGroups
 ---@field backgrounds? Base16ProMax.Config.ColorGroups.Backgrounds Background colors
@@ -791,6 +796,33 @@ function V.validate_styles(styles)
   return next(errors) == nil, errors
 end
 
+---Validate setup_globals configuration
+---@param setup_globals Base16ProMax.Config.SetupGlobals Setup globals configuration
+---@return boolean valid True if valid
+---@return table<string, string> errors Map of error keys to messages
+function V.validate_setup_globals(setup_globals)
+  local errors = {}
+
+  if not setup_globals then
+    return true, errors -- setup_globals is optional
+  end
+
+  if type(setup_globals) ~= "table" then
+    errors.setup_globals = "must be a table"
+    return false, errors
+  end
+
+  -- Validate boolean setup_globals options
+  local boolean_options = { "terminal_colors", "base16_gui_colors" }
+  for _, option in ipairs(boolean_options) do
+    if setup_globals[option] ~= nil and type(setup_globals[option]) ~= "boolean" then
+      errors["setup_globals." .. option] = "must be a boolean"
+    end
+  end
+
+  return next(errors) == nil, errors
+end
+
 ---Validate plugins configuration
 ---@param plugins Base16ProMax.Config.Plugins Plugins configuration
 ---@return boolean valid True if valid
@@ -1068,6 +1100,7 @@ function V.validate_config(config)
     { key = "colors", validator = V.validate_colors },
     { key = "styles", validator = V.validate_styles },
     { key = "plugins", validator = V.validate_plugins },
+    { key = "setup_globals", validator = V.validate_setup_globals },
     { key = "color_groups", validator = V.validate_color_groups },
     { key = "highlight_groups", validator = V.validate_highlight_groups },
   }
@@ -1088,7 +1121,8 @@ function V.validate_config(config)
   end
 
   -- Check for unknown top-level keys
-  local valid_keys = { "colors", "styles", "plugins", "color_groups", "highlight_groups", "before_highlight" }
+  local valid_keys =
+    { "colors", "styles", "plugins", "setup_globals", "color_groups", "highlight_groups", "before_highlight" }
   for key, _ in pairs(config) do
     local found = false
     for _, valid_key in ipairs(valid_keys) do
@@ -2293,6 +2327,10 @@ local default_config = {
   plugins = {
     enable_all = false,
   },
+  setup_globals = {
+    terminal_colors = false,
+    base16_gui_colors = false,
+  },
   color_groups = {
     -- Background variations
     backgrounds = {
@@ -2391,6 +2429,7 @@ local default_config = {
 --- - before_highlight: *Optional* - callback to run before setting highlight groups
 --- - styles: *Optional* - styling options
 --- - plugins: *Optional* - enable/disable plugins
+--- - setup_globals: *Optional* - setup vim.g globals
 --- - color_groups: *Optional* - semantic color groups
 ---
 ---# Colors Table ~
@@ -2460,6 +2499,10 @@ local default_config = {
 ---     },
 ---     plugins = {
 ---       enable_all = false,
+---     },
+---     setup_globals = {
+---       terminal_colors = false, -- set vim.g.terminal_color_* variables
+---       base16_gui_colors = false, -- set vim.g.base16_gui* variables
 ---     },
 ---     color_groups = {
 ---       -- Background variations
@@ -2611,6 +2654,44 @@ function M.setup(user_config)
     local error_msg = V.format_errors(runtime_errors, {})
     vim.notify("base16-pro-max.nvim runtime validation failed:\n" .. error_msg, vim.log.levels.ERROR)
     error("base16-pro-max.nvim: Runtime validation failed. See above for details.")
+  end
+
+  if M.config.setup_globals.terminal_colors then
+    vim.g.terminal_color_0 = M.config.colors.base00
+    vim.g.terminal_color_1 = M.config.colors.base08
+    vim.g.terminal_color_2 = M.config.colors.base0B
+    vim.g.terminal_color_3 = M.config.colors.base0A
+    vim.g.terminal_color_4 = M.config.colors.base0D
+    vim.g.terminal_color_5 = M.config.colors.base0E
+    vim.g.terminal_color_6 = M.config.colors.base0C
+    vim.g.terminal_color_7 = M.config.colors.base05
+    vim.g.terminal_color_8 = M.config.colors.base03
+    vim.g.terminal_color_9 = M.config.colors.base09
+    vim.g.terminal_color_10 = M.config.colors.base01
+    vim.g.terminal_color_11 = M.config.colors.base02
+    vim.g.terminal_color_12 = M.config.colors.base04
+    vim.g.terminal_color_13 = M.config.colors.base06
+    vim.g.terminal_color_14 = M.config.colors.base0F
+    vim.g.terminal_color_15 = M.config.colors.base07
+  end
+
+  if M.config.setup_globals.base16_gui_colors then
+    vim.g.base16_gui00 = M.config.colors.base00
+    vim.g.base16_gui01 = M.config.colors.base01
+    vim.g.base16_gui02 = M.config.colors.base02
+    vim.g.base16_gui03 = M.config.colors.base03
+    vim.g.base16_gui04 = M.config.colors.base04
+    vim.g.base16_gui05 = M.config.colors.base05
+    vim.g.base16_gui06 = M.config.colors.base06
+    vim.g.base16_gui07 = M.config.colors.base07
+    vim.g.base16_gui08 = M.config.colors.base08
+    vim.g.base16_gui09 = M.config.colors.base09
+    vim.g.base16_gui0A = M.config.colors.base0A
+    vim.g.base16_gui0B = M.config.colors.base0B
+    vim.g.base16_gui0C = M.config.colors.base0C
+    vim.g.base16_gui0D = M.config.colors.base0D
+    vim.g.base16_gui0E = M.config.colors.base0E
+    vim.g.base16_gui0F = M.config.colors.base0F
   end
 
   did_setup = true

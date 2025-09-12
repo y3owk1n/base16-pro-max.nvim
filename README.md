@@ -164,6 +164,7 @@ _Need more? [Tinted Theming](https://github.com/tinted-theming/schemes) has 200+
 | `color_groups`     | Remap semantic roles (what “function” or “error” looks like).          |
 | `highlight_groups` | Add / override any Neovim highlight group.                             |
 | `plugins`          | Enable integrations (or `enable_all = true`).                          |
+| `setup_globals`    | Setup vim.g globals (e.g., `vim.g.terminal_color_*`).                  |
 | `before_highlight` | Lua hook to mutate every highlight right before it’s applied.          |
 
 ### Default Configuration
@@ -208,6 +209,12 @@ require("base16-pro-max").setup({
   -- Plugin integrations
   plugins = {
     enable_all = false,                -- Enable all supported plugins
+  },
+
+  -- Setup vim.g globals
+  setup_globals = {
+    terminal_colors = false,           -- Set terminal colors (`vim.g.terminal_color_*`)
+    base16_gui_colors = false,         -- Set base16 gui colors (`vim.g.base16_gui*`)
   },
 
   -- Semantic color groups
