@@ -35,6 +35,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: |
-            chore(build): auto-generate docs from readme
+            chore(build): auto-generate docs
 
             This is an automated commit.
