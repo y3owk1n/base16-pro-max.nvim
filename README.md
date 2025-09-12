@@ -8,6 +8,8 @@ Base16 for modern Neovim — not just colors.
 
 > Paste any Base16 palette (Rose-pine, Catppuccin, Tokyo Night…) and instantly get a fully-featured, modern theme—no extra themes, no hacks, no switching plugins.
 
+![demo](https://github.com/user-attachments/assets/4f3dec27-fcf5-45ae-a157-41cc7ab7dd4d)
+
 ## 🌈 Why base16-pro-max.nvim is different
 
 | Feature                                | Why it matters?                                                                                              |
