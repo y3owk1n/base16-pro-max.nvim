@@ -1832,7 +1832,7 @@ end
 ---@param highlights table<string, vim.api.keyset.highlight>
 ---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_plugins_hl(highlights, c)
-  -- Mini Icons
+  -- Mini Icons - `https://github.com/nvim-mini/mini.icons`
   if U.has_plugin("nvim_mini_mini_icons") then
     highlights.MiniIconsAzure = { fg = U.get_group_color("syntax", "operator", c) }
     highlights.MiniIconsBlue = { fg = U.get_group_color("states", "info", c) }
@@ -1845,7 +1845,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.MiniIconsYellow = { fg = U.get_group_color("syntax", "type", c) }
   end
 
-  -- Mini Diff
+  -- Mini Diff - `https://github.com/nvim-mini/mini.diff`
   if U.has_plugin("nvim_mini_mini_diff") then
     highlights.MiniDiffAdd = { link = "DiffAdd" }
     highlights.MiniDiffChange = { link = "DiffChange" }
@@ -1855,7 +1855,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.MiniDiffSignDelete = { link = "DiffDelete" }
   end
 
-  -- Mini Files
+  -- Mini Files - `https://github.com/nvim-mini/mini.files`
   if U.has_plugin("nvim_mini_mini_files") then
     highlights.MiniFilesBorder = { link = "FloatBorder" }
     highlights.MiniFilesBorderModified = {
@@ -1869,7 +1869,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.MiniFilesTitle = { link = "FloatTitle" }
   end
 
-  -- Mini Pick
+  -- Mini Pick - `https://github.com/nvim-mini/mini.pick`
   if U.has_plugin("nvim_mini_mini_pick") then
     highlights.MiniPickBorder = { link = "FloatBorder" }
     highlights.MiniPickBorderBusy = {
@@ -1895,7 +1895,7 @@ local function setup_plugins_hl(highlights, c)
     }
   end
 
-  -- Render Markdown
+  -- Render Markdown - `https://github.com/MeanderingProgrammer/render-markdown.nvim`
   if U.has_plugin("meandering_programmer_render_markdown_nvim") then
     local heading_colors = {
       U.get_group_color("states", "error", c), -- H1: red
@@ -1927,7 +1927,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.RenderMarkdownTableRow = { fg = U.get_group_color("foregrounds", "dim", c) }
   end
 
-  -- Undo Glow
+  -- Undo Glow - `https://github.com/y3owk1n/undo-glow.nvim`
   if U.has_plugin("y3owk1n_undo_glow_nvim") then
     highlights.UgUndo = {
       bg = U.get_group_color("states", "error", c),
@@ -1956,7 +1956,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.UgCursor = { bg = U.get_group_color("backgrounds", "light", c) }
   end
 
-  -- Time Machine
+  -- Time Machine - `https://github.com/y3owk1n/time-machine.nvim`
   if U.has_plugin("y3owk1n_time_machine_nvim") then
     highlights.TimeMachineNormal = {
       link = "Normal",
@@ -1988,7 +1988,7 @@ local function setup_plugins_hl(highlights, c)
     }
   end
 
-  -- Blink Cmp
+  -- Blink Cmp - `https://github.com/saghen/blink.cmp`
   if U.has_plugin("saghen_blink_cmp") then
     highlights.BlinkCmpDoc = { link = "Normal" }
     highlights.BlinkCmpDocSeparator = { fg = U.get_group_color("foregrounds", "dim", c) }
@@ -2041,7 +2041,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.BlinkCmpMenuBorder = { link = "FloatBorder" }
   end
 
-  -- Grug Far
+  -- Grug Far - `https://github.com/MagicDuck/grug-far.nvim`
   if U.has_plugin("magicduck_grug_far_nvim") then
     highlights.GrugFarHelpHeader = { fg = U.get_group_color("states", "info", c) }
     highlights.GrugFarHelpHeaderKey = { fg = U.get_group_color("syntax", "constant", c) }
@@ -2063,7 +2063,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.GrugFarResultsStats = { fg = U.get_group_color("states", "hint", c) }
   end
 
-  -- Which Key
+  -- Which Key - `https://github.com/folke/which-key.nvim`
   if U.has_plugin("folke_which_key_nvim") then
     highlights.WhichKey = {
       fg = U.get_group_color("states", "info", c),
@@ -2097,7 +2097,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.WhichKeyValue = { fg = U.get_group_color("syntax", "constant", c) }
   end
 
-  -- Flash
+  -- Flash - `https://github.com/folke/flash.nvim`
   if U.has_plugin("folke_flash_nvim") then
     highlights.FlashLabel = {
       fg = U.get_group_color("backgrounds", "normal", c),
@@ -2105,7 +2105,7 @@ local function setup_plugins_hl(highlights, c)
     }
   end
 
-  -- Gitsigns
+  -- Gitsigns - `https://github.com/lewis6991/gitsigns.nvim`
   if U.has_plugin("lewis6991_gitsigns_nvim") then
     highlights.GitSignsAdd = { fg = U.get_group_color("git", "added", c) }
     highlights.GitSignsChange = { fg = U.get_group_color("git", "changed", c) }
