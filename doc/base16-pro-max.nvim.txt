@@ -465,6 +465,10 @@ M.colorscheme()                                                  *M.colorscheme*
 <
 
 
+M._reapply_highlights()                                  *M._reapply_highlights*
+    Re-apply highlights (for benchmarking only)
+
+
 M.colors()                                                            *M.colors*
     Get the semantic color palette
 
