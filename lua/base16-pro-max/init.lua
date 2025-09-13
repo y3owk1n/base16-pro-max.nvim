@@ -1377,10 +1377,7 @@ local function setup_syntax_hl(highlights, c)
 
   -- Constants
   highlights.Constant = { fg = U.get_group_color("syntax", "constant", c), bold = M.config.styles.bold }
-  highlights.String = {
-    fg = U.get_group_color("syntax", "string", c),
-    italic = M.config.styles.italic,
-  }
+  highlights.String = { fg = U.get_group_color("syntax", "string", c) }
   highlights.Character = { fg = U.get_group_color("syntax", "constant", c) }
   highlights.Number = { fg = U.get_group_color("syntax", "number", c) }
   highlights.Boolean = { fg = U.get_group_color("syntax", "boolean", c) }
