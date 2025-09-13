@@ -1376,34 +1376,25 @@ local function setup_syntax_hl(highlights, c)
   }
 
   -- Constants
-  highlights.Constant = { fg = U.get_group_color("syntax", "constant", c) }
+  highlights.Constant = { fg = U.get_group_color("syntax", "constant", c), bold = M.config.styles.bold }
   highlights.String = {
     fg = U.get_group_color("syntax", "string", c),
     italic = M.config.styles.italic,
   }
   highlights.Character = { fg = U.get_group_color("syntax", "constant", c) }
   highlights.Number = { fg = U.get_group_color("syntax", "number", c) }
-  highlights.Boolean = {
-    fg = U.get_group_color("syntax", "boolean", c),
-    italic = M.config.styles.italic,
-  }
+  highlights.Boolean = { fg = U.get_group_color("syntax", "boolean", c) }
   highlights.Float = { fg = U.get_group_color("syntax", "number", c) }
 
   -- Identifiers
-  highlights.Identifier = {
-    fg = U.get_group_color("syntax", "variable", c),
-    italic = M.config.styles.italic,
-  }
+  highlights.Identifier = { fg = U.get_group_color("syntax", "variable", c) }
   highlights.Function = {
     fg = U.get_group_color("syntax", "function_name", c),
     bold = M.config.styles.bold,
   }
 
   -- Keywords and statements
-  highlights.Statement = {
-    fg = U.get_group_color("syntax", "function_name", c),
-    bold = M.config.styles.bold,
-  }
+  highlights.Statement = { fg = U.get_group_color("syntax", "function_name", c) }
   highlights.Conditional = { fg = U.get_group_color("syntax", "keyword", c) }
   highlights.Repeat = { fg = U.get_group_color("syntax", "keyword", c) }
   highlights.Label = { fg = U.get_group_color("syntax", "operator", c) }
@@ -1411,16 +1402,15 @@ local function setup_syntax_hl(highlights, c)
   highlights.Keyword = {
     fg = U.get_group_color("syntax", "keyword", c),
     bold = M.config.styles.bold,
-    italic = M.config.styles.italic,
   }
   highlights.Exception = { fg = U.get_group_color("states", "error", c) }
 
   -- Preprocessor
   highlights.PreProc = { link = "PreCondit" }
-  highlights.Include = { fg = U.get_group_color("syntax", "function_name", c) }
+  highlights.Include = { fg = U.get_group_color("syntax", "function_name", c), italic = M.config.styles.italic }
   highlights.Define = { fg = U.get_group_color("syntax", "keyword", c) }
   highlights.Macro = { fg = U.get_group_color("states", "error", c) }
-  highlights.PreCondit = { fg = U.get_group_color("syntax", "keyword", c) }
+  highlights.PreCondit = { fg = U.get_group_color("syntax", "keyword", c), italic = M.config.styles.italic }
 
   -- Types
   highlights.Type = {
@@ -1471,7 +1461,8 @@ local function setup_treesitter_hl(highlights, c)
     bold = M.config.styles.bold,
     italic = M.config.styles.italic,
   }
-  highlights["@variable.parameter"] = { fg = U.get_group_color("syntax", "constant", c) }
+  highlights["@variable.parameter"] =
+    { fg = U.get_group_color("syntax", "constant", c), italic = M.config.styles.italic }
   highlights["@variable.parameter.builtin"] = {
     fg = U.get_group_color("syntax", "keyword", c),
     bold = M.config.styles.bold,
@@ -1490,7 +1481,7 @@ local function setup_treesitter_hl(highlights, c)
   highlights["@constant.macro"] = { fg = U.get_group_color("syntax", "constant", c) }
 
   -- Modules and labels
-  highlights["@module"] = { fg = U.get_group_color("syntax", "variable", c) }
+  highlights["@module"] = { fg = U.get_group_color("syntax", "variable", c), bold = M.config.styles.bold }
   highlights["@module.builtin"] = {
     fg = U.get_group_color("syntax", "variable", c),
     bold = M.config.styles.bold,
@@ -1523,7 +1514,7 @@ local function setup_treesitter_hl(highlights, c)
   highlights["@type.definition"] = { link = "Type" }
 
   -- Attributes and properties
-  highlights["@attribute"] = { fg = U.get_group_color("syntax", "type", c) }
+  highlights["@attribute"] = { fg = U.get_group_color("syntax", "type", c), italic = M.config.styles.italic }
   highlights["@attribute.builtin"] = {
     fg = U.get_group_color("syntax", "type", c),
     bold = M.config.styles.bold,
@@ -2121,10 +2112,7 @@ local function setup_plugins_hl(highlights, c)
       bold = M.config.styles.bold,
     }
     highlights.WhichKeyBorder = { link = "FloatBorder" }
-    highlights.WhichKeyDesc = {
-      fg = U.get_group_color("foregrounds", "normal", c),
-      italic = M.config.styles.italic,
-    }
+    highlights.WhichKeyDesc = { fg = U.get_group_color("foregrounds", "normal", c) }
     highlights.WhichKeyFloat = { link = "NormalFloat" }
     highlights.WhichKeyGroup = {
       fg = U.get_group_color("states", "hint", c),
