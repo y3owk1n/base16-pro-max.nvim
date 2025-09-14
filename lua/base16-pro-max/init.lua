@@ -2837,15 +2837,6 @@ function M.get_group_color(group, key)
   return U.get_group_color(group, key, colors)
 end
 
----Blend two colors together
----@param fg_color string Foreground color (hex)
----@param bg_color string Background color (hex)
----@param alpha number Alpha value between 0 (background) and 1 (foreground)
----@return string blended_color The blended color as hex
-function M.blend_colors(fg_color, bg_color, alpha)
-  return U.blend(fg_color, bg_color, alpha)
-end
-
 ---Invalidate the color cache (useful when colors are updated)
 ---@private
 function M._invalidate_cache()
