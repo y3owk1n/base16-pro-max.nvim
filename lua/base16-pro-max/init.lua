@@ -123,11 +123,21 @@ local base16_alias_map = {
 ---@class Base16ProMax.Config
 ---@field colors? table<Base16ProMax.Group.Raw, string> Colors to override
 ---@field styles? Base16ProMax.Config.Styles Styles to override
----@field highlight_groups? table<string, vim.api.keyset.highlight> Additional highlight groups to set
+---@field highlight_groups? Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function  Additional highlight groups to set
 ---@field before_highlight? fun(group: string, opts: vim.api.keyset.highlight, c: table<Base16ProMax.Group.Alias, string>): nil Callback to run before setting highlight groups
 ---@field plugins? Base16ProMax.Config.Plugins Enable/disable plugins
 ---@field color_groups? Base16ProMax.Config.ColorGroups Color groups to override
 ---@field setup_globals? Base16ProMax.Config.SetupGlobals Setup globals
+
+---@alias Base16ProMax.Config.HighlightGroups.Table table<string, vim.api.keyset.highlight>
+---@alias Base16ProMax.Config.HighlightGroups.Function fun(function_refs: Base16ProMax.Config.HighlightGroups.FunctionRefs): Base16ProMax.Config.HighlightGroups.Table
+
+---@class Base16ProMax.Config.HighlightGroups.FunctionRefs
+---@field get_group_color_fn fun(group: string, key: string, c: table<Base16ProMax.Group.Alias, string>): string|nil
+---@field get_bg_fn fun(bg: string): string|nil
+---@field blend_fn fun(fg: string, bg: string, alpha: number): string
+---@field styles_config Base16ProMax.Config.Styles Styles configuration
+---@field colors table<Base16ProMax.Group.Alias, string> Semantic color palette
 
 ---@class Base16ProMax.Config.SetupGlobals
 ---@field terminal_colors? boolean Set terminal colors
@@ -956,7 +966,7 @@ function V.validate_color_groups(color_groups)
 end
 
 ---Validate highlight groups configuration
----@param highlight_groups table<string, vim.api.keyset.highlight> Highlight groups configuration
+---@param highlight_groups Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function Highlight groups configuration
 ---@return boolean valid True if valid
 ---@return table<string, string> errors Map of error keys to messages
 function V.validate_highlight_groups(highlight_groups)
@@ -966,100 +976,102 @@ function V.validate_highlight_groups(highlight_groups)
     return true, errors -- highlight_groups is optional
   end
 
-  if type(highlight_groups) ~= "table" then
-    errors.highlight_groups = "must be a table"
+  if not (type(highlight_groups) == "table" or type(highlight_groups) == "function") then
+    errors.highlight_groups = "must be a table / function"
     return false, errors
   end
 
-  for group_name, highlight in pairs(highlight_groups) do
-    if type(group_name) ~= "string" then
-      errors["highlight_groups.<invalid_key>"] = "highlight group names must be strings"
-      goto continue
-    end
+  if type(highlight_groups) == "table" then
+    for group_name, highlight in pairs(highlight_groups) do
+      if type(group_name) ~= "string" then
+        errors["highlight_groups.<invalid_key>"] = "highlight group names must be strings"
+        goto continue
+      end
 
-    if type(highlight) ~= "table" then
-      errors["highlight_groups." .. group_name] = "must be a table"
-      goto continue
-    end
+      if type(highlight) ~= "table" then
+        errors["highlight_groups." .. group_name] = "must be a table"
+        goto continue
+      end
 
-    -- Validate highlight attributes
-    for attr, value in pairs(highlight) do
-      if attr == "fg" or attr == "bg" or attr == "sp" then
-        if type(value) ~= "string" then
-          errors["highlight_groups." .. group_name .. "." .. attr] = "color attributes must be strings"
+      -- Validate highlight attributes
+      for attr, value in pairs(highlight) do
+        if attr == "fg" or attr == "bg" or attr == "sp" then
+          if type(value) ~= "string" then
+            errors["highlight_groups." .. group_name .. "." .. attr] = "color attributes must be strings"
+          else
+            local base16_aliases = _base16_aliases or U.get_base16_aliases()
+            local base16_raw = _base16_raw or U.get_base16_raw()
+            -- Check if it's a known base16 alias
+            local is_alias = false
+            for _, alias in ipairs(base16_aliases) do
+              if value == alias then
+                is_alias = true
+                break
+              end
+            end
+
+            -- Check if it's a raw base16 color
+            local is_raw = false
+            if not is_alias then
+              for _, raw in ipairs(base16_raw) do
+                if value == raw then
+                  is_raw = true
+                  break
+                end
+              end
+            end
+
+            -- If it's not an alias or raw color, validate as hex
+            if not is_alias and not is_raw then
+              local valid, err = U.is_valid_hex_color(value)
+              if not valid then
+                errors["highlight_groups." .. group_name .. "." .. attr] = err
+              end
+            end
+          end
+        elseif attr == "blend" then
+          if type(value) ~= "number" or value < 0 or value > 100 then
+            errors["highlight_groups." .. group_name .. "." .. attr] = "must be a number between 0 and 100"
+          end
+        elseif attr == "link" then
+          if type(value) ~= "string" then
+            errors["highlight_groups." .. group_name .. "." .. attr] = "must be a string"
+          end
         else
-          local base16_aliases = _base16_aliases or U.get_base16_aliases()
-          local base16_raw = _base16_raw or U.get_base16_raw()
-          -- Check if it's a known base16 alias
-          local is_alias = false
-          for _, alias in ipairs(base16_aliases) do
-            if value == alias then
-              is_alias = true
+          -- Boolean attributes (bold, italic, underline, etc.)
+          local boolean_attrs = {
+            "bold",
+            "italic",
+            "underline",
+            "undercurl",
+            "underdouble",
+            "underdotted",
+            "underdashed",
+            "strikethrough",
+            "reverse",
+            "standout",
+            "nocombine",
+          }
+          local is_boolean_attr = false
+          for _, bool_attr in ipairs(boolean_attrs) do
+            if attr == bool_attr then
+              is_boolean_attr = true
               break
             end
           end
 
-          -- Check if it's a raw base16 color
-          local is_raw = false
-          if not is_alias then
-            for _, raw in ipairs(base16_raw) do
-              if value == raw then
-                is_raw = true
-                break
-              end
+          if is_boolean_attr then
+            if type(value) ~= "boolean" then
+              errors["highlight_groups." .. group_name .. "." .. attr] = "must be a boolean"
             end
+          else
+            errors["highlight_groups." .. group_name .. "." .. attr] = "unknown highlight attribute"
           end
-
-          -- If it's not an alias or raw color, validate as hex
-          if not is_alias and not is_raw then
-            local valid, err = U.is_valid_hex_color(value)
-            if not valid then
-              errors["highlight_groups." .. group_name .. "." .. attr] = err
-            end
-          end
-        end
-      elseif attr == "blend" then
-        if type(value) ~= "number" or value < 0 or value > 100 then
-          errors["highlight_groups." .. group_name .. "." .. attr] = "must be a number between 0 and 100"
-        end
-      elseif attr == "link" then
-        if type(value) ~= "string" then
-          errors["highlight_groups." .. group_name .. "." .. attr] = "must be a string"
-        end
-      else
-        -- Boolean attributes (bold, italic, underline, etc.)
-        local boolean_attrs = {
-          "bold",
-          "italic",
-          "underline",
-          "undercurl",
-          "underdouble",
-          "underdotted",
-          "underdashed",
-          "strikethrough",
-          "reverse",
-          "standout",
-          "nocombine",
-        }
-        local is_boolean_attr = false
-        for _, bool_attr in ipairs(boolean_attrs) do
-          if attr == bool_attr then
-            is_boolean_attr = true
-            break
-          end
-        end
-
-        if is_boolean_attr then
-          if type(value) ~= "boolean" then
-            errors["highlight_groups." .. group_name .. "." .. attr] = "must be a boolean"
-          end
-        else
-          errors["highlight_groups." .. group_name .. "." .. attr] = "unknown highlight attribute"
         end
       end
-    end
 
-    ::continue::
+      ::continue::
+    end
   end
 
   return next(errors) == nil, errors
@@ -2213,8 +2225,24 @@ local function apply_highlights()
   local highlights = compute_highlights(c)
 
   -- Apply custom highlights from user configuration
-  if M.config.highlight_groups and next(M.config.highlight_groups) then
-    for group, highlight in pairs(M.config.highlight_groups) do
+  local highlight_groups = M.config.highlight_groups
+
+  if type(M.config.highlight_groups) == "function" then
+    local function_refs = {
+      get_group_color_fn = U.get_group_color,
+      get_bg_fn = U.get_bg,
+      blend_fn = U.blend,
+      styles_config = M.config.styles,
+      colors = c,
+    }
+
+    highlight_groups = M.config.highlight_groups(function_refs)
+  end
+
+  ---@diagnostic disable-next-line: param-type-mismatch
+  if highlight_groups and next(highlight_groups) then
+    ---@diagnostic disable-next-line: param-type-mismatch
+    for group, highlight in pairs(highlight_groups) do
       local existing = highlights[group] or {}
 
       -- Handle link references
