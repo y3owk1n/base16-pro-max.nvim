@@ -477,7 +477,11 @@ require("base16-pro-max").setup({
 
 ### Custom Highlight Groups
 
+You can either do it in table or function format.
+
 ```lua
+-- Table format
+-- In table format, you can use the semantic aliases and apply anything from `vim.api.keyset.highlight`
 require("base16-pro-max").setup({
   colors = { --[[ your base16 colors ]] },
   highlight_groups = {
@@ -490,6 +494,32 @@ require("base16-pro-max").setup({
     -- Link to existing highlight
     MyOtherHighlight = { link = "Function" },
   },
+})
+```
+
+```lua
+-- Function format
+-- In function format, you have more access to the raw functions
+-- `function_refs.get_group_color_fn` -> get colors from color groups
+-- `function_refs.get_bg_fn` -> get background color (or transparent)
+-- `function_refs.blend_fn` -> blend colors
+-- `function_refs.styles_config` -> styles configuration
+-- `function_refs.colors` -> semantic color palette
+--
+-- NOTE: To understand more, refer to the source code on how these are being used to apply highlights in a consistent
+-- way
+require("base16-pro-max").setup({
+  colors = { --[[ your base16 colors ]] },
+  highlight_groups = function(function_refs)
+    return {
+      MyCustomHighlight = {
+        fg = function_refs.get_group_color_fn("syntax", "function_name", function_refs.colors),
+        bg = function_refs.get_bg_fn(function_refs.get_group_color_fn("backgrounds", "normal", function_refs.colors)),
+        bold = function_refs.styles_config.bold,
+      },
+      MyOtherHighlight = { link = "Function" },
+    }
+  end,
 })
 ```
 
