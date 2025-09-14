@@ -497,19 +497,6 @@ M.setup({user_config?})                                                *M.setup*
 ==============================================================================
 API                                                         *base16-pro-max.api*
 
-M.colorscheme()                                                  *M.colorscheme*
-    Setup the colorscheme
-
-    Usage: ~
->lua
-        vim.cmd.colorscheme("base16-pro-max")
-<
-
-
-M._reapply_highlights()                                  *M._reapply_highlights*
-    Re-apply highlights (for benchmarking only)
-
-
 M.colors()                                                            *M.colors*
     Get the semantic color palette
 
