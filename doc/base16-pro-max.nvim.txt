@@ -404,11 +404,11 @@ automatically validate that all required colors are provided.
          dim = "bg_dim",
          light = "bg_light",
          selection = "bg_light",
-         cursor_line = function(c, blend_fn)
-           return blend_fn(c.bg_light, c.bg, 0.6)
+         cursor_line = function(function_refs)
+           return function_refs.blend_fn(function_refs.colors.bg_light, function_refs.colors.bg, 0.6)
          end,
-         cursor_column = function(c, blend_fn)
-           return blend_fn(c.bg_dim, c.bg, 0.3)
+         cursor_column = function(function_refs)
+           return function_refs.blend_fn(function_refs.colors.bg_dim, function_refs.colors.bg, 0.3)
          end,
        },
 
@@ -420,8 +420,8 @@ automatically validate that all required colors are provided.
          light = "fg_light",
          bright = "fg_bright",
          comment = "fg_dark",
-         line_number = function(c, blend_fn)
-           return blend_fn(c.fg_dim, c.bg, 0.7)
+         line_number = function(function_refs)
+           return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7)
          end,
        },
 
