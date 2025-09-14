@@ -337,8 +337,8 @@ require("base16-pro-max").setup({
       dim = "bg_dim",
       light = "bg_light",
       selection = "bg_light",
-      cursor_line = function(c, blend_fn) return blend_fn(c.bg_light, c.bg, 0.6) end,
-      cursor_column = function(c, blend_fn) return blend_fn(c.bg_dim, c.bg, 0.3) end,
+      cursor_line = function(function_refs) return function_refs.blend_fn(function_refs.colors.bg_light, function_refs.colors.bg, 0.6) end,
+      cursor_column = function(function_refs) return function_refs.blend_fn(function_refs.colors.bg_dim, function_refs.colors.bg, 0.3) end,
     },
     foregrounds = {
       normal = "fg",
@@ -347,7 +347,7 @@ require("base16-pro-max").setup({
       light = "fg_light",
       bright = "fg_bright",
       comment = "fg_dark",
-      line_number = function(c, blend_fn) return blend_fn(c.fg_dim, c.bg, 0.7) end,
+      line_number = function(function_refs) return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7) end,
     },
     syntax = {
       variable = "fg",
@@ -465,10 +465,15 @@ require("base16-pro-max").setup({
     syntax = {
       -- Use a different color for functions
       function_name = "cyan", -- Use semantic alias
-      operater = "base0A",    -- Use raw base16 color
+      operator = "base0A",    -- Use raw base16 color
       -- Use a custom function for comments
-      comment = function(c, blend_fn)
-        return blend_fn(c.fg_dim, c.bg, 0.8)
+      -- Using function, you can access the raw colors and blend functions
+      -- `function_refs.colors` -> semantic color palette
+      -- `function_refs.blend_fn` -> blend colors function
+      --
+      -- NOTE: To understand more, refer to the source code on how these are being used for color_groups
+      comment = function(function_refs)
+        return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.8)
       end,
     },
   },
