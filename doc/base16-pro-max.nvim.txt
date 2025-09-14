@@ -120,7 +120,22 @@ Base16ProMax.Config.ColorGroups                *Base16ProMax.Config.ColorGroups*
 Base16ProMax.Config.ColorGroups.Color    *Base16ProMax.Config.ColorGroups.Color*
 
     Type: ~
-        string|fun(c:table<Base16ProMax.Group.Alias,string>,blend_fn:function):string
+        string|Base16ProMax.Config.ColorGroups.Color.Function
+
+
+                                *Base16ProMax.Config.ColorGroups.Color.Function*
+Base16ProMax.Config.ColorGroups.Color.Function
+
+    Type: ~
+        fun(function_refs:Base16ProMax.Config.ColorGroups.Color.FunctionRefs):string
+
+
+                            *Base16ProMax.Config.ColorGroups.Color.FunctionRefs*
+Base16ProMax.Config.ColorGroups.Color.FunctionRefs
+
+    Fields: ~
+        {blend_fn}  (fun(fg:string,bg:string,alpha:number):string)  Blend function
+        {colors}    (table<Base16ProMax.Group.Alias,string>)        Semantic color palette
 
 
                                    *Base16ProMax.Config.ColorGroups.Backgrounds*
