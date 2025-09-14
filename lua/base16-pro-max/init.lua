@@ -2727,6 +2727,7 @@ end
 
 ---@mod base16-pro-max.api API
 
+---@private
 ---Setup the colorscheme
 ---@usage [[
 ---vim.cmd.colorscheme("base16-pro-max")
@@ -2742,6 +2743,7 @@ function M.colorscheme()
   apply_highlights()
 end
 
+---@private
 ---Re-apply highlights (for benchmarking only)
 function M._reapply_highlights()
   apply_highlights()
