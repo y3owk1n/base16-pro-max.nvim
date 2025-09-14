@@ -21,6 +21,7 @@ Base16 for modern Neovim — not just colors.
 | **Function-powered palette**           | Dynamic colors using Lua functions (`cursorline = function(c) return blend(c.bg, c.fg, 0.07) end`).          |
 | **Runtime validation**                 | Helpful errors _before_ your screen turns pink.                                                              |
 | **Fast startup**                       | Aggressive caching; only recomputes what you change.                                                         |
+| **YML schema loading**                 | Load any Base16 YAML scheme directly — no manual color copying required.                                     |
 
 > [!NOTE]
 > This plugin **does not ship** individual themes — paste your favourite Base16 hex codes or grab 200+ ready-made ones from [tinted-theming/schemes](https://github.com/tinted-theming/schemes).
@@ -56,6 +57,8 @@ use {
 > [!NOTE]
 > All features and integration are disabled by default, feel free to enable them in your config.
 
+### Using manual colors
+
 ```lua
 -- Minimal setup with Kanagawa-inspired colors
 {
@@ -79,7 +82,117 @@ use {
 }
 ```
 
+### Using Base16 YAML schemes
+
+```lua
+-- Load from Base16 YAML scheme file
+{
+  "y3owk1n/base16-pro-max.nvim",
+  priority = 1000,
+  config = function()
+    local yaml_parser = require("base16-pro-max.parser")
+
+    require("base16-pro-max").setup {
+      -- Load colors from YAML file
+      colors = yaml_parser.get_base16_colors("~/.config/nvim/schemes/gruvbox-dark.yaml"),
+      styles = { italic = true, transparency = true },
+      plugins = { enable_all = true },
+    }
+    vim.cmd.colorscheme "base16-pro-max"
+  end,
+}
+```
+
 _That’s it—no extra themes to install, no generated files, no external build step._
+
+## 📁 YAML Scheme Support
+
+The plugin includes a high-performance YAML parser specifically designed for Base16 schemes.
+
+> [!NOTE]
+> This feature is an optional helper and wont be loaded if the module is not required.
+
+### Loading from YAML Files
+
+```lua
+local yaml_parser = require("base16-pro-max.parser")
+
+-- Basic usage: load colors from a YAML file
+local colors = yaml_parser.get_base16_colors("~/path/to/scheme.yaml") -- or `yml` extension
+
+require("base16-pro-max").setup({
+  colors = colors,
+  -- your other config...
+})
+```
+
+### YAML file format
+
+Your YAML files should follow the standard Base16 format:
+
+```lua
+scheme: "Rosé Pine Moon"
+author: "Emilia Dunfelt <edun@dunfelt.se>"
+slug: "rose-pine-moon"
+base00: "232136"
+base01: "2a273f"
+base02: "393552"
+base03: "6e6a86"
+base04: "908caa"
+base05: "e0def4"
+base06: "e0def4"
+base07: "56526e"
+base08: "eb6f92"
+base09: "f6c177"
+base0A: "ea9a97"
+base0B: "3e8fb0"
+base0C: "9ccfd8"
+base0D: "c4a7e7"
+base0E: "f6c177"
+base0F: "56526e"
+```
+
+`Tinted-theming/schemes` with indentation is also supported, e.g:
+
+```lua
+system: "base16"
+name: "Gruvbox dark"
+author: "Tinted Theming (https://github.com/tinted-theming), morhetz (https://github.com/morhetz/gruvbox)"
+variant: "dark"
+palette:
+  base00: "#282828"
+  base01: "#3c3836"
+  base02: "#504945"
+  base03: "#665c54"
+  base04: "#928374"
+  base05: "#ebdbb2"
+  base06: "#fbf1c7"
+  base07: "#f9f5d7"
+  base08: "#cc241d"
+  base09: "#d65d0e"
+  base0A: "#d79921"
+  base0B: "#98971a"
+  base0C: "#689d6a"
+  base0D: "#458588"
+  base0E: "#b16286"
+  base0F: "#9d0006"
+```
+
+### Cache Management
+
+```lua
+local yaml_parser = require("base16-pro-max.parser")
+
+-- Clear all cached data
+yaml_parser.clear_cache()
+
+-- Get cache statistics
+local stats = yaml_parser.get_cache_stats()
+print(vim.inspect(stats))
+
+-- Cache is automatically saved on VimLeavePre
+-- Cache location: vim.fn.stdpath("cache") .. "/base16_cache/schemes_cache.lua"
+```
 
 ## 🎨 Popular palettes ready to copy
 
@@ -311,6 +424,38 @@ The purpose is based of [tinted theming scheme](https://github.com/tinted-themin
 
 ## Advanced Usage
 
+### Loading Colors from Multiple Sources
+
+```lua
+local yaml_parser = require("base16-pro-max.parser")
+
+-- Option 1: Load from YAML file
+local colors = yaml_parser.get_base16_colors("~/schemes/gruvbox.yaml")
+
+-- Option 2: Mix YAML colors with manual overrides
+local colors = vim.tbl_extend("force",
+  yaml_parser.get_base16_colors("~/schemes/base.yaml"),
+  {
+    base08 = "#ff0000", -- Override red
+    base0B = "#00ff00", -- Override green
+  }
+)
+
+-- Option 3: Conditional loading
+local colors = {}
+local condition = some_condition() -- e.g., vim.fn.filereadable
+if condition then
+  colors = yaml_parser.get_base16_colors("~/schemes/custom.yaml")
+else
+  -- Fallback to manual colors
+  colors = {
+    base00 = "#1f1f28", base01 = "#2a2a37", -- ...
+  }
+end
+
+require("base16-pro-max").setup({ colors = colors })
+```
+
 ### Custom Color Groups
 
 ```lua
@@ -396,6 +541,7 @@ require("base16-pro-max").setup({
 
 ```lua
 local base16_pro_max = require("base16-pro-max")
+local yaml_parser = require("base16-pro-max.parser")
 
 -- Setup the plugin (required)
 base16_pro_max.setup(config)
@@ -424,6 +570,11 @@ local blended = base16_pro_max.blend_colors("#ff0000", "#000000", 0.5)
 
 -- Validate colors
 local valid, missing = base16_pro_max.validate_colors(my_colors)
+
+-- YAML Parser API
+local colors = yaml_parser.get_base16_colors("path/to/scheme.yaml")
+yaml_parser.clear_cache()
+local stats = yaml_parser.get_cache_stats()
 ```
 
 ## 🔌 Supported Plugins
@@ -451,9 +602,17 @@ The current plugin integrations reflect my personal Neovim setup - these are the
 - Check that all required base16 colors (base00-base0F) are provided
 - Verify color format is valid hex (e.g., `#ffffff`)
 
+**YAML loading issues:**
+
+- Verify the YAML file exists and is readable
+- Ensure YAML file follows Base16 format with base00-base0F keys
+- Check file permissions and path expansion (~ should work)
+- Use absolute paths if relative paths cause issues
+
 **Performance issues:**
 
 - Color caching should handle most cases automatically
+- YAML files are cached automatically with mtime checking
 - If you modify colors frequently, call `require("base16")._invalidate_cache()` manually
 - There's a `bench.lua` script in the repo root that you can run with `nvim --headless -l ./bench.lua` to get the benchmark results.
 
