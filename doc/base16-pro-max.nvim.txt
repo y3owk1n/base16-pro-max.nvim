@@ -56,6 +56,7 @@ Table of Contents                                      *base16-pro-max.contents*
 Types ··················································· |base16-pro-max.types|
 Setup ··················································· |base16-pro-max.setup|
 API ······················································· |base16-pro-max.api|
+YAML parser for base16-pro-max ························· |base16-pro-max.parser|
 
 ==============================================================================
 Types                                                     *base16-pro-max.types*
@@ -543,6 +544,83 @@ M.validate_colors({colors})                                  *M.validate_colors*
     Returns: ~
         (boolean)   True if all required colors are present
         (string[])  Array of missing color keys
+
+
+==============================================================================
+YAML parser for base16-pro-max                           *base16-pro-max.parser*
+
+# Module setup ~
+
+This module will be setup automatically if the module is required.
+There's no need to call `setup()` manually.
+
+# Usage ~
+
+>lua
+  local yaml_parser = require("base16-pro-max.parser")
+
+  -- Load from YAML file
+  local colors = yaml_parser.get_base16_colors("~/schemes/gruvbox.yaml")
+
+  -- Mix YAML colors with manual overrides
+  local colors = vim.tbl_extend("force",
+    yaml_parser.get_base16_colors("~/schemes/base.yaml"),
+    {
+      base08 = "#ff0000", -- Override red
+      base0B = "#00ff00", -- Override green
+    }
+  )
+
+  -- Conditional loading
+  local colors = {}
+  local condition = some_condition() -- e.g., vim.fn.filereadable
+  if condition then
+    colors = yaml_parser.get_base16_colors("~/schemes/custom.yaml")
+  else
+    -- Fallback to manual colors
+    colors = {
+      base00 = "#1f1f28", base01 = "#2a2a37", -- ...
+    }
+  end
+
+  require("base16-pro-max").setup({ colors = colors })
+<
+
+# Cache Management ~
+
+Cache is saved to `vim.fn.stdpath("cache") .. "/base16_cache"` with filename of `schemes_cache.lua`
+
+>lua
+  local yaml_parser = require("base16-pro-max.parser")
+
+  -- Clear all cached data
+  yaml_parser.clear_cache()
+
+  -- Get cache statistics
+  local stats = yaml_parser.get_cache_stats()
+  print(vim.inspect(stats))
+<
+
+
+M.get_base16_colors({path})                                *M.get_base16_colors*
+    Get Base16 colors with optimized filtering
+
+    Parameters: ~
+        {path}  (string)
+
+    Returns: ~
+        (table)
+
+
+M.clear_cache()                                                  *M.clear_cache*
+    Clear all caches
+
+    Returns: ~
+        (nil)
+
+
+M.get_cache_stats()                                          *M.get_cache_stats*
+    Get cache statistics
 
 
 vim:tw=78:ts=8:noet:ft=help:norl:
