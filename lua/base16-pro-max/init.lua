@@ -152,7 +152,12 @@ local base16_alias_map = {
 ---@field git? Base16ProMax.Config.ColorGroups.Git Git colors
 ---@field search? Base16ProMax.Config.ColorGroups.Search Search colors
 
----@alias Base16ProMax.Config.ColorGroups.Color string|fun(c: table<Base16ProMax.Group.Alias, string>, blend_fn: function): string
+---@alias Base16ProMax.Config.ColorGroups.Color string|Base16ProMax.Config.ColorGroups.Color.Function
+---@alias Base16ProMax.Config.ColorGroups.Color.Function fun(function_refs: Base16ProMax.Config.ColorGroups.Color.FunctionRefs): string
+
+---@class Base16ProMax.Config.ColorGroups.Color.FunctionRefs
+---@field blend_fn fun(fg: string, bg: string, alpha: number): string Blend function
+---@field colors table<Base16ProMax.Group.Alias, string> Semantic color palette
 
 ---@class Base16ProMax.Config.ColorGroups.Backgrounds
 ---@field normal? Base16ProMax.Config.ColorGroups.Color Normal background
@@ -512,7 +517,11 @@ function U.get_group_color(group, key, c)
 
   local color_value = color_group[key]
   if type(color_value) == "function" then
-    return color_value(c, U.blend)
+    local function_refs = {
+      blend_fn = U.blend,
+      colors = c,
+    }
+    return color_value(function_refs)
   else
     return c[color_value]
   end
@@ -2351,11 +2360,11 @@ local default_config = {
       dim = "bg_dim",
       light = "bg_light",
       selection = "bg_light",
-      cursor_line = function(c, blend_fn)
-        return blend_fn(c.bg_light, c.bg, 0.6)
+      cursor_line = function(function_refs)
+        return function_refs.blend_fn(function_refs.colors.bg_light, function_refs.colors.bg, 0.6)
       end,
-      cursor_column = function(c, blend_fn)
-        return blend_fn(c.bg_dim, c.bg, 0.3)
+      cursor_column = function(function_refs)
+        return function_refs.blend_fn(function_refs.colors.bg_dim, function_refs.colors.bg, 0.3)
       end,
     },
 
@@ -2367,8 +2376,8 @@ local default_config = {
       light = "fg_light",
       bright = "fg_bright",
       comment = "fg_dark",
-      line_number = function(c, blend_fn)
-        return blend_fn(c.fg_dim, c.bg, 0.7)
+      line_number = function(function_refs)
+        return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7)
       end,
     },
 
@@ -2649,7 +2658,11 @@ function M.setup(user_config)
       if type(group_config) == "table" then
         for key, color_value in pairs(group_config) do
           if type(color_value) == "function" then
-            local success, result = pcall(color_value, test_colors, U.blend)
+            local function_refs = {
+              blend_fn = U.blend,
+              colors = test_colors,
+            }
+            local success, result = pcall(color_value, function_refs)
             if not success then
               runtime_errors["color_groups." .. group_name .. "." .. key] = "Function failed: " .. tostring(result)
             elseif type(result) ~= "string" then
