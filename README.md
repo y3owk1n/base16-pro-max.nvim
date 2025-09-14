@@ -456,7 +456,7 @@ end
 require("base16-pro-max").setup({ colors = colors })
 ```
 
-### Custom Color Groups
+### Overrides Color Groups
 
 ```lua
 require("base16-pro-max").setup({
