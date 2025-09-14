@@ -66,11 +66,36 @@ Base16ProMax.Config                                        *Base16ProMax.Config*
     Fields: ~
         {colors?}            (table<Base16ProMax.Group.Raw,string>)                                                          Colors to override
         {styles?}            (Base16ProMax.Config.Styles)                                                                    Styles to override
-        {highlight_groups?}  (table<string,vim.api.keyset.highlight>)                                                        Additional highlight groups to set
+        {highlight_groups?}  (Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function)        Additional highlight groups to set
         {before_highlight?}  (fun(group:string,opts:vim.api.keyset.highlight,c:table<Base16ProMax.Group.Alias,string>):nil)  Callback to run before setting highlight groups
         {plugins?}           (Base16ProMax.Config.Plugins)                                                                   Enable/disable plugins
         {color_groups?}      (Base16ProMax.Config.ColorGroups)                                                               Color groups to override
         {setup_globals?}     (Base16ProMax.Config.SetupGlobals)                                                              Setup globals
+
+
+                                     *Base16ProMax.Config.HighlightGroups.Table*
+Base16ProMax.Config.HighlightGroups.Table
+
+    Type: ~
+        table<string,vim.api.keyset.highlight>
+
+
+                                  *Base16ProMax.Config.HighlightGroups.Function*
+Base16ProMax.Config.HighlightGroups.Function
+
+    Type: ~
+        fun(function_refs:Base16ProMax.Config.HighlightGroups.FunctionRefs):Base16ProMax.Config.HighlightGroups.Table
+
+
+                              *Base16ProMax.Config.HighlightGroups.FunctionRefs*
+Base16ProMax.Config.HighlightGroups.FunctionRefs
+
+    Fields: ~
+        {get_group_color_fn}  (fun(group:string,key:string,c:table<Base16ProMax.Group.Alias,string>):string|nil)
+        {get_bg_fn}           (fun(bg:string):string|nil)
+        {blend_fn}            (fun(fg:string,bg:string,alpha:number):string)
+        {styles_config}       (Base16ProMax.Config.Styles)                                                        Styles configuration
+        {colors}              (table<Base16ProMax.Group.Alias,string>)                                            Semantic color palette
 
 
 Base16ProMax.Config.SetupGlobals              *Base16ProMax.Config.SetupGlobals*
