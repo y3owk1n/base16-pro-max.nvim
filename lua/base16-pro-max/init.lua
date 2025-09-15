@@ -121,7 +121,7 @@ local base16_alias_map = {
 ---@mod base16-pro-max.types Types
 
 ---@class Base16ProMax.Config
----@field colors? table<Base16ProMax.Group.Raw, string> Colors to override
+---@field colors table<Base16ProMax.Group.Raw, string> Colors to override
 ---@field styles? Base16ProMax.Config.Styles Styles to override
 ---@field highlight_groups? Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function  Additional highlight groups to set
 ---@field before_highlight? fun(group: string, opts: vim.api.keyset.highlight, c: table<Base16ProMax.Group.Alias, string>): nil Callback to run before setting highlight groups
@@ -2576,13 +2576,13 @@ local default_config = {
 ---
 ---All boolean options are `false` and opt-in by default.
 ---
---- - colors: *Required* - the 16 Base 16 hex codes
---- - highlight_groups: *Optional* - additional highlight groups to set
---- - before_highlight: *Optional* - callback to run before setting highlight groups
---- - styles: *Optional* - styling options
---- - plugins: *Optional* - enable/disable plugins
---- - setup_globals: *Optional* - setup vim.g globals
---- - color_groups: *Optional* - semantic color groups
+--- - `colors`: **Required** - the 16 Base 16 hex codes
+--- - `highlight_groups`: **Optional** - additional highlight groups to set
+--- - `before_highlight`: **Optional** - callback to run before setting highlight groups
+--- - `styles`: **Optional** - styling options
+--- - `plugins`: **Optional** - enable/disable plugins
+--- - `setup_globals`: **Optional** - setup vim.g globals
+--- - `color_groups`: **Optional** - semantic color groups
 ---
 ---# Colors Table ~
 ---
