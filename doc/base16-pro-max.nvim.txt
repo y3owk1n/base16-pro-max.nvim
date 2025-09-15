@@ -252,6 +252,7 @@ Base16ProMax.Config.Plugins                        *Base16ProMax.Config.Plugins*
         {folke_which_key_nvim?}                        (boolean)  Enable Which Key
         {folke_flash_nvim?}                            (boolean)  Enable Flash
         {lewis6991_gitsigns_nvim?}                     (boolean)  Enable Git Signs
+        {nvim_telescope_telescope_nvim?}               (boolean)  Enable Telescope
 
 
 Base16ProMax.Group.Raw                                  *Base16ProMax.Group.Raw*
