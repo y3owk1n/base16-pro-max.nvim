@@ -1362,11 +1362,11 @@ local function setup_statusline_hl(highlights, c)
 
   -- Statusline
   highlights.StatusLine = {
-    fg = U.get_group_color("foregrounds", "dark", c),
+    fg = U.get_group_color("foregrounds", "normal", c),
     bg = U.get_group_color("backgrounds", "dim", c),
   }
   highlights.StatusLineNC = {
-    fg = U.get_group_color("foregrounds", "dim", c),
+    fg = U.get_group_color("foregrounds", "dark", c),
     bg = U.get_group_color("backgrounds", "dim", c),
   }
 end
