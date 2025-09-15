@@ -632,6 +632,7 @@ local stats = yaml_parser.get_cache_stats()
 - **Flash**: Jump navigation
 - **Gitsigns**: Git signs
 - **Telescope**: Fuzzy finders
+- **Fzf**: Fuzzy finders
 
 ### Why Only These Few Plugins?
 
