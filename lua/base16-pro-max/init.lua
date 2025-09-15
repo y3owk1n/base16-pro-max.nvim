@@ -151,6 +151,7 @@ local base16_alias_map = {
 ---@field diff? Base16ProMax.Config.ColorGroups.Diff Diff colors
 ---@field git? Base16ProMax.Config.ColorGroups.Git Git colors
 ---@field search? Base16ProMax.Config.ColorGroups.Search Search colors
+---@field markdown? Base16ProMax.Config.ColorGroups.Markdown Markdown colors
 
 ---@alias Base16ProMax.Config.ColorGroups.Color string|Base16ProMax.Config.ColorGroups.Color.Function
 ---@alias Base16ProMax.Config.ColorGroups.Color.Function fun(function_refs: Base16ProMax.Config.ColorGroups.Color.FunctionRefs): string
@@ -214,6 +215,14 @@ local base16_alias_map = {
 ---@field match? Base16ProMax.Config.ColorGroups.Color Match foreground
 ---@field current? Base16ProMax.Config.ColorGroups.Color Current match foreground
 ---@field incremental? Base16ProMax.Config.ColorGroups.Color Incremental match foreground
+
+---@class Base16ProMax.Config.ColorGroups.Markdown
+---@field heading1? Base16ProMax.Config.ColorGroups.Color Heading 1 foreground
+---@field heading2? Base16ProMax.Config.ColorGroups.Color Heading 2 foreground
+---@field heading3? Base16ProMax.Config.ColorGroups.Color Heading 3 foreground
+---@field heading4? Base16ProMax.Config.ColorGroups.Color Heading 4 foreground
+---@field heading5? Base16ProMax.Config.ColorGroups.Color Heading 5 foreground
+---@field heading6? Base16ProMax.Config.ColorGroups.Color Heading 6 foreground
 
 ---@class Base16ProMax.Config.Styles
 ---@field italic? boolean Enable italics
@@ -942,6 +951,7 @@ function V.validate_color_groups(color_groups)
     states = { "error", "warning", "info", "hint", "success" },
     diff = { "added", "removed", "changed", "text" },
     search = { "match", "current", "incremental" },
+    markdown = { "heading1", "heading2", "heading3", "heading4", "heading5", "heading6" },
   }
 
   for group_name, group_config in pairs(color_groups) do
@@ -1640,23 +1650,13 @@ end
 ---@param highlights table<string, vim.api.keyset.highlight>
 ---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_markdown_hl(highlights, c)
-  -- Markdown headings with consistent color progression
-  local heading_colors = {
-    U.get_group_color("states", "error", c), -- H1: red
-    U.get_group_color("syntax", "constant", c), -- H2: orange
-    U.get_group_color("syntax", "type", c), -- H3: yellow
-    U.get_group_color("states", "success", c), -- H4: green
-    U.get_group_color("syntax", "operator", c), -- H5: cyan
-    U.get_group_color("states", "info", c), -- H6: blue
-  }
-
   for i = 1, 6 do
     highlights["markdownH" .. i] = {
-      fg = heading_colors[i],
+      fg = U.get_group_color("markdown", "heading" .. i, c),
       bold = M.config.styles.bold,
     }
     highlights["markdownH" .. i .. "Delimiter"] = {
-      fg = heading_colors[i],
+      fg = U.get_group_color("markdown", "heading" .. i, c),
       bold = M.config.styles.bold,
     }
     highlights["@markup.heading." .. i .. ".markdown"] = { link = "markdownH" .. i }
@@ -1944,8 +1944,8 @@ local function setup_plugins_hl(highlights, c)
     highlights.MiniPickIconDirectory = { link = "Directory" }
     highlights.MiniPickIconFile = { link = "MiniPickNormal" }
     highlights.MiniPickHeader = {
-      fg = U.get_group_color("states", "error", c),
-      bg = U.get_group_color("states", "error", c),
+      fg = U.get_group_color("markdown", "heading1", c),
+      bg = U.get_group_color("markdown", "heading1", c),
       blend = M.config.styles.blends.medium,
     }
     highlights.MiniPickMatchCurrent = { link = "CursorLine" }
@@ -1962,18 +1962,9 @@ local function setup_plugins_hl(highlights, c)
 
   -- Render Markdown - `https://github.com/MeanderingProgrammer/render-markdown.nvim`
   if U.has_plugin("meandering_programmer_render_markdown_nvim") then
-    local heading_colors = {
-      U.get_group_color("states", "error", c), -- H1: red
-      U.get_group_color("syntax", "constant", c), -- H2: orange
-      U.get_group_color("syntax", "type", c), -- H3: yellow
-      U.get_group_color("states", "success", c), -- H4: green
-      U.get_group_color("syntax", "operator", c), -- H5: cyan
-      U.get_group_color("states", "info", c), -- H6: blue
-    }
-
     for i = 1, 6 do
       highlights["RenderMarkdownH" .. i .. "Bg"] = {
-        bg = heading_colors[i],
+        bg = U.get_group_color("markdown", "heading" .. i, c),
         blend = M.config.styles.blends.medium,
       }
     end
@@ -2463,6 +2454,16 @@ local default_config = {
       current = "orange",
       incremental = "orange",
     },
+
+    -- Markdown
+    markdown = {
+      heading1 = "red",
+      heading2 = "orange",
+      heading3 = "yellow",
+      heading4 = "green",
+      heading5 = "cyan",
+      heading6 = "blue",
+    },
   },
 }
 
@@ -2636,6 +2637,16 @@ local default_config = {
 ---         match = "yellow",
 ---         current = "orange",
 ---         incremental = "orange",
+---       },
+---
+---       -- Markdown
+---       markdown = {
+---         heading1 = "red",
+---         heading2 = "orange",
+---         heading3 = "yellow",
+---         heading4 = "green",
+---         heading5 = "cyan",
+---         heading6 = "blue",
 ---       },
 ---     },
 ---   }
