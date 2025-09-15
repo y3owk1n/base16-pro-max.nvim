@@ -161,7 +161,7 @@ Base16ProMax.Config.ColorGroups.Foregrounds
         {bright?}       (Base16ProMax.Config.ColorGroups.Color)  Bright foreground
         {comment?}      (Base16ProMax.Config.ColorGroups.Color)  Comment foreground
         {line_number?}  (Base16ProMax.Config.ColorGroups.Color)  Line number foreground
-        {deprecated?}   (Base16ProMax.Config.ColorGroups.Color)  deprecated foreground
+        {border?}       (Base16ProMax.Config.ColorGroups.Color)  Border
 
 
 Base16ProMax.Config.ColorGroups.Syntax  *Base16ProMax.Config.ColorGroups.Syntax*
@@ -178,6 +178,7 @@ Base16ProMax.Config.ColorGroups.Syntax  *Base16ProMax.Config.ColorGroups.Syntax*
         {comment?}        (Base16ProMax.Config.ColorGroups.Color)  Comment foreground
         {operator?}       (Base16ProMax.Config.ColorGroups.Color)  Operator foreground
         {delimiter?}      (Base16ProMax.Config.ColorGroups.Color)  Delimiter foreground
+        {deprecated?}     (Base16ProMax.Config.ColorGroups.Color)  Deprecated foreground
 
 
 Base16ProMax.Config.ColorGroups.States  *Base16ProMax.Config.ColorGroups.States*
