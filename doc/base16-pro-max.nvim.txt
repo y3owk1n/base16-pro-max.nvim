@@ -424,6 +424,7 @@ automatically validate that all required colors are provided.
          line_number = function(function_refs)
            return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7)
          end,
+         border = "fg_dim",
        },
 
        -- Semantic colors for syntax
