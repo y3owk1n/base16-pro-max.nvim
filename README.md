@@ -633,6 +633,7 @@ local stats = yaml_parser.get_cache_stats()
 - **Gitsigns**: Git signs
 - **Telescope**: Fuzzy finders
 - **Fzf**: Fuzzy finders
+- **Lualine**: Lualine statusline (add `options.theme = "base16-pro-max"` to your lualine configuration)
 
 ### Why Only These Few Plugins?
 
