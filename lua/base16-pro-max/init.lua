@@ -242,6 +242,7 @@ local base16_alias_map = {
 ---@field folke_which_key_nvim? boolean Enable Which Key
 ---@field folke_flash_nvim? boolean Enable Flash
 ---@field lewis6991_gitsigns_nvim? boolean Enable Git Signs
+---@field nvim_telescope_telescope_nvim? boolean Enable Telescope
 
 ---@alias Base16ProMax.Group.Raw
 ---| '"base00"' # Default background (Semantic Alias: bg)
@@ -873,6 +874,7 @@ function V.validate_plugins(plugins)
     "folke_which_key_nvim",
     "folke_flash_nvim",
     "lewis6991_gitsigns_nvim",
+    "nvim_telescope_telescope_nvim",
   }
 
   for key, value in pairs(plugins) do
@@ -2178,6 +2180,35 @@ local function setup_plugins_hl(highlights, c)
     highlights.GitSignsChangeInline = { link = "GitSignsChange" }
     highlights.GitSignsDeleteInline = { link = "GitSignsDelete" }
     highlights.GitSignsUntrackedInline = { link = "GitSignsUntracked" }
+  end
+
+  -- Telescope - `https://github.com/nvim-telescope/telescope.nvim`
+  if U.has_plugin("nvim_telescope_telescope_nvim") then
+    highlights.TelescopeBorder = { link = "FloatBorder" }
+    highlights.TelescopeNormal = { link = "NormalFloat" }
+    highlights.TelescopePreviewNormal = { link = "TelescopeNormal" }
+    highlights.TelescopePromptNormal = { link = "TelescopeNormal" }
+    highlights.TelescopeResultsNormal = { link = "TelescopeNormal" }
+    highlights.TelescopeTitle = { link = "FloatTitle" }
+    highlights.TelescopeSelectionCaret = {
+      fg = U.get_group_color("syntax", "constant", c),
+      bg = U.get_group_color("backgrounds", "cursor_line", c),
+    }
+    highlights.TelescopeSelection = {
+      link = "CursorLine",
+    }
+    highlights.TelescopeMatching = { fg = U.get_group_color("states", "info", c) }
+    highlights.TelescopePromptPrefix = { fg = U.get_group_color("syntax", "constant", c) }
+
+    highlights.TelescopePreviewTitle = {
+      link = "FloatTitle",
+    }
+    highlights.TelescopePromptTitle = {
+      link = "FloatTitle",
+    }
+    highlights.TelescopeResultsTitle = {
+      link = "FloatTitle",
+    }
   end
 end
 
