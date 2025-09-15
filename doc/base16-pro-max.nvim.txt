@@ -54,6 +54,7 @@ see also |base16-pro-max.setup|
 Table of Contents                                      *base16-pro-max.contents*
 
 Types ··················································· |base16-pro-max.types|
+Plugin Integrations ··································· |base16-pro-max.plugins|
 Setup ··················································· |base16-pro-max.setup|
 API ······················································· |base16-pro-max.api|
 YAML parser for base16-pro-max ························· |base16-pro-max.parser|
@@ -312,10 +313,48 @@ Base16ProMax.Group.Alias                              *Base16ProMax.Group.Alias*
         ("brown")      Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> (Raw Base16ProMax: base0F)
 
 
-M.config                                                              *M.config*
+==============================================================================
+Plugin Integrations                                     *base16-pro-max.plugins*
 
-    Type: ~
-        (Base16ProMax.Config)
+# Plugin Integrations ~
+
+This module contains the plugin integrations for `base16-pro-max.nvim`.
+All integrations are disabled by default, but can be enabled in the config.
+
+>lua
+   require("base16-pro-max").setup({
+     plugins = {
+       enable_all = true,
+     },
+   })
+<
+
+Or you can enable them individually:
+
+>lua
+   require("base16-pro-max").setup({
+     plugins = {
+       enable_all = false,
+       nvim_mini_mini_icons = true
+     },
+   })
+<
+
+## Available Plugins Integrations ~
+
+See also |Base16ProMax.Config.Plugins| for all the plugins that can be enabled or disabled.
+
+Below only shows help for plugins that requires extra setup.
+
+### Lualine ~
+
+>lua
+   require("lualine").setup({
+     options = {
+       theme = "base16-pro-max",
+     },
+   })
+<
 
 
 ==============================================================================
