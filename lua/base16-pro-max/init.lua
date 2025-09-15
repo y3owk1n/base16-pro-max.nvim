@@ -253,6 +253,7 @@ local base16_alias_map = {
 ---@field folke_flash_nvim? boolean Enable Flash
 ---@field lewis6991_gitsigns_nvim? boolean Enable Git Signs
 ---@field nvim_telescope_telescope_nvim? boolean Enable Telescope
+---@field ibhagwan_fzf_lua? boolean Enable Fzf Lua
 
 ---@alias Base16ProMax.Group.Raw
 ---| '"base00"' # Default background (Semantic Alias: bg)
@@ -885,6 +886,7 @@ function V.validate_plugins(plugins)
     "folke_flash_nvim",
     "lewis6991_gitsigns_nvim",
     "nvim_telescope_telescope_nvim",
+    "ibhagwan_fzf_lua",
   }
 
   for key, value in pairs(plugins) do
@@ -1950,7 +1952,7 @@ local function setup_plugins_hl(highlights, c)
     }
     highlights.MiniPickMatchCurrent = { link = "CursorLine" }
     highlights.MiniPickMatchMarked = { link = "Visual" }
-    highlights.MiniPickMatchRanges = { fg = U.get_group_color("syntax", "operator", c) }
+    highlights.MiniPickMatchRanges = { fg = U.get_group_color("search", "match", c) }
     highlights.MiniPickNormal = { link = "NormalFloat" }
     highlights.MiniPickPreviewLine = { link = "CursorLine" }
     highlights.MiniPickPreviewRegion = { link = "IncSearch" }
@@ -2191,7 +2193,7 @@ local function setup_plugins_hl(highlights, c)
     highlights.TelescopeSelection = {
       link = "CursorLine",
     }
-    highlights.TelescopeMatching = { fg = U.get_group_color("states", "info", c) }
+    highlights.TelescopeMatching = { fg = U.get_group_color("search", "match", c) }
     highlights.TelescopePromptPrefix = { fg = U.get_group_color("syntax", "constant", c) }
 
     highlights.TelescopePreviewTitle = {
@@ -2203,6 +2205,26 @@ local function setup_plugins_hl(highlights, c)
     highlights.TelescopeResultsTitle = {
       link = "FloatTitle",
     }
+  end
+
+  -- Fzf Lua - `https://github.com/ibhagwan/fzf-lua`
+  if U.has_plugin("ibhagwan_fzf_lua") then
+    highlights.FzfLuaNormal = { link = "NormalFloat" }
+    highlights.FzfLuaBorder = { link = "FloatBorder" }
+    highlights.FzfLuaTitle = { link = "FloatTitle" }
+    highlights.FzfLuaHeaderBind = { fg = U.get_group_color("syntax", "type", c) }
+    highlights.FzfLuaHeaderText = { fg = U.get_group_color("syntax", "constant", c) }
+    highlights.FzfLuaFzfMatch = { fg = U.get_group_color("search", "match", c) }
+    highlights.FzfLuaFzfPrompt = { fg = U.get_group_color("syntax", "constant", c) }
+    highlights.FzfLuaPathColNr = { fg = U.get_group_color("states", "info", c) }
+    highlights.FzfLuaPathLineNr = { fg = U.get_group_color("states", "success", c) }
+    highlights.FzfLuaBufName = { fg = U.get_group_color("states", "hint", c) }
+    highlights.FzfLuaBufNr = { fg = U.get_group_color("syntax", "type", c) }
+    highlights.FzfLuaBufFlagCur = { fg = U.get_group_color("syntax", "constant", c) }
+    highlights.FzfLuaBufFlagAlt = { fg = U.get_group_color("states", "info", c) }
+    highlights.FzfLuaTabTitle = { fg = U.get_group_color("syntax", "operator", c) }
+    highlights.FzfLuaTabMarker = { fg = U.get_group_color("syntax", "type", c) }
+    highlights.FzfLuaLiveSym = { fg = U.get_group_color("syntax", "constant", c) }
   end
 end
 
