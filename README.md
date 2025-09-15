@@ -695,8 +695,9 @@ The plugin is structured in several key modules:
 4. Use `U.has_plugin()` to check if integration should be applied
 5. Do not specify colors directly in highlight groups, add the colors to `default_config.color_groups` instead if really needed and use it.
 6. Follow existing patterns for consistent styling
-7. Test with actual plugin usage
-8. Submit pull request with documentation
+7. If there's a need for extra setup, add it to the help section at `@mod base16-pro-max.plugins`
+8. Test with actual plugin usage
+9. Submit pull request with documentation
 
 ### Color Group Architecture
 
