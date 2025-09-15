@@ -115,6 +115,7 @@ Base16ProMax.Config.ColorGroups                *Base16ProMax.Config.ColorGroups*
         {diff?}         (Base16ProMax.Config.ColorGroups.Diff)         Diff colors
         {git?}          (Base16ProMax.Config.ColorGroups.Git)          Git colors
         {search?}       (Base16ProMax.Config.ColorGroups.Search)       Search colors
+        {markdown?}     (Base16ProMax.Config.ColorGroups.Markdown)     Markdown colors
 
 
 Base16ProMax.Config.ColorGroups.Color    *Base16ProMax.Config.ColorGroups.Color*
@@ -215,6 +216,17 @@ Base16ProMax.Config.ColorGroups.Search  *Base16ProMax.Config.ColorGroups.Search*
         {match?}        (Base16ProMax.Config.ColorGroups.Color)  Match foreground
         {current?}      (Base16ProMax.Config.ColorGroups.Color)  Current match foreground
         {incremental?}  (Base16ProMax.Config.ColorGroups.Color)  Incremental match foreground
+
+
+Base16ProMax.Config.ColorGroups.Markdown*Base16ProMax.Config.ColorGroups.Markdown*
+
+    Fields: ~
+        {heading1?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 1 foreground
+        {heading2?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 2 foreground
+        {heading3?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 3 foreground
+        {heading4?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 4 foreground
+        {heading5?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 5 foreground
+        {heading6?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 6 foreground
 
 
 Base16ProMax.Config.Styles                          *Base16ProMax.Config.Styles*
@@ -474,6 +486,16 @@ automatically validate that all required colors are provided.
          match = "yellow",
          current = "orange",
          incremental = "orange",
+       },
+
+       -- Markdown
+       markdown = {
+         heading1 = "red",
+         heading2 = "orange",
+         heading3 = "yellow",
+         heading4 = "green",
+         heading5 = "cyan",
+         heading6 = "blue",
        },
      },
    }
