@@ -254,6 +254,7 @@ local base16_alias_map = {
 ---@field lewis6991_gitsigns_nvim? boolean Enable Git Signs
 ---@field nvim_telescope_telescope_nvim? boolean Enable Telescope
 ---@field ibhagwan_fzf_lua? boolean Enable Fzf Lua
+---@field nvim_lualine_lualine_nvim? boolean Enable Lualine
 
 ---@alias Base16ProMax.Group.Raw
 ---| '"base00"' # Default background (Semantic Alias: bg)
@@ -887,6 +888,7 @@ function V.validate_plugins(plugins)
     "lewis6991_gitsigns_nvim",
     "nvim_telescope_telescope_nvim",
     "ibhagwan_fzf_lua",
+    "nvim_lualine_lualine_nvim",
   }
 
   for key, value in pairs(plugins) do
@@ -2226,6 +2228,10 @@ local function setup_plugins_hl(highlights, c)
     highlights.FzfLuaTabMarker = { fg = U.get_group_color("syntax", "type", c) }
     highlights.FzfLuaLiveSym = { fg = U.get_group_color("syntax", "constant", c) }
   end
+
+  -- Lualine - `https://github.com/nvim-lualine/lualine.nvim`
+  -- No hl groups for Lualine
+  -- Refer to `lua/lualine/themes/base16-pro-max.lua` for the setup
 end
 
 ---@private
@@ -2935,6 +2941,13 @@ function M.validate_colors(colors)
   end
 
   return #missing == 0, missing
+end
+
+---Check if a plugin is enabled
+---@param name string The plugin name
+---@return boolean
+function M.has_plugin(name)
+  return U.has_plugin(name)
 end
 
 return M
