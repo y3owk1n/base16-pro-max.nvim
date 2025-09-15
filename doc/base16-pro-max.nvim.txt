@@ -117,6 +117,7 @@ Base16ProMax.Config.ColorGroups                *Base16ProMax.Config.ColorGroups*
         {git?}          (Base16ProMax.Config.ColorGroups.Git)          Git colors
         {search?}       (Base16ProMax.Config.ColorGroups.Search)       Search colors
         {markdown?}     (Base16ProMax.Config.ColorGroups.Markdown)     Markdown colors
+        {modes?}        (Base16ProMax.Config.ColorGroups.Modes)        Mode colors
 
 
 Base16ProMax.Config.ColorGroups.Color    *Base16ProMax.Config.ColorGroups.Color*
@@ -228,6 +229,17 @@ Base16ProMax.Config.ColorGroups.Markdown*Base16ProMax.Config.ColorGroups.Markdow
         {heading4?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 4 foreground
         {heading5?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 5 foreground
         {heading6?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 6 foreground
+
+
+Base16ProMax.Config.ColorGroups.Modes    *Base16ProMax.Config.ColorGroups.Modes*
+
+    Fields: ~
+        {normal?}       (Base16ProMax.Config.ColorGroups.Color)  Normal mode foreground
+        {insert?}       (Base16ProMax.Config.ColorGroups.Color)  Insert mode foreground
+        {visual?}       (Base16ProMax.Config.ColorGroups.Color)  Visual mode foreground
+        {visual_line?}  (Base16ProMax.Config.ColorGroups.Color)  Visual line mode foreground
+        {replace?}      (Base16ProMax.Config.ColorGroups.Color)  Replace mode foreground
+        {command?}      (Base16ProMax.Config.ColorGroups.Color)  Command mode foreground
 
 
 Base16ProMax.Config.Styles                          *Base16ProMax.Config.Styles*
@@ -537,6 +549,16 @@ automatically validate that all required colors are provided.
          heading4 = "green",
          heading5 = "cyan",
          heading6 = "blue",
+       },
+
+       -- Modes
+       modes = {
+         normal = "blue",
+         insert = "green",
+         visual = "yellow",
+         visual_line = "yellow",
+         replace = "cyan",
+         command = "red",
        },
      },
    }
