@@ -348,6 +348,7 @@ require("base16-pro-max").setup({
       bright = "fg_bright",
       comment = "fg_dark",
       line_number = function(function_refs) return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7) end,
+      border = "fg_dim",
     },
     syntax = {
       variable = "fg",

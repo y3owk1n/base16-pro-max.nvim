@@ -924,7 +924,7 @@ function V.validate_color_groups(color_groups)
 
   local group_schemas = {
     backgrounds = { "normal", "dim", "light", "selection", "cursor_line", "cursor_column" },
-    foregrounds = { "normal", "dim", "dark", "light", "bright", "comment", "line_number" },
+    foregrounds = { "normal", "dim", "dark", "light", "bright", "comment", "line_number", "border" },
     syntax = {
       "variable",
       "constant",
@@ -1867,7 +1867,7 @@ end
 ---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_float_hl(highlights, c)
   highlights.FloatBorder = {
-    fg = U.get_group_color("foregrounds", "dim", c),
+    fg = U.get_group_color("foregrounds", "border", c),
     bg = U.get_bg(U.get_group_color("backgrounds", "normal", c)),
   }
   highlights.FloatShadow = { bg = U.get_group_color("backgrounds", "light", c) }
@@ -2410,6 +2410,7 @@ local default_config = {
       line_number = function(function_refs)
         return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7)
       end,
+      border = "fg_dim",
     },
 
     -- Semantic colors for syntax
@@ -2583,6 +2584,7 @@ local default_config = {
 ---         line_number = function(function_refs)
 ---           return function_refs.blend_fn(function_refs.colors.fg_dim, function_refs.colors.bg, 0.7)
 ---         end,
+---         border = "fg_dim",
 ---       },
 ---
 ---       -- Semantic colors for syntax
