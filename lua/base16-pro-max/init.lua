@@ -1938,12 +1938,14 @@ local function setup_plugins_hl(highlights, c)
       fg = U.get_group_color("states", "warning", c),
       bg = U.get_bg(U.get_group_color("backgrounds", "normal", c)),
     }
-    highlights.MiniPickBorderText = { bg = U.get_group_color("foregrounds", "dim", c) }
+    highlights.MiniPickBorderText = { link = "FloatTitle" }
+    highlights.MiniPickCursor = { link = "CursorLine" }
     highlights.MiniPickIconDirectory = { link = "Directory" }
     highlights.MiniPickIconFile = { link = "MiniPickNormal" }
     highlights.MiniPickHeader = {
-      fg = U.get_group_color("states", "hint", c),
-      bg = U.get_bg(U.get_group_color("backgrounds", "normal", c)),
+      fg = U.get_group_color("states", "error", c),
+      bg = U.get_group_color("states", "error", c),
+      blend = M.config.styles.blends.medium,
     }
     highlights.MiniPickMatchCurrent = { link = "CursorLine" }
     highlights.MiniPickMatchMarked = { link = "Visual" }
