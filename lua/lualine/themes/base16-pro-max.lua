@@ -33,11 +33,11 @@ local bg_base = get_bg()
 
 local theme_colors = {
   -- Mode-specific colors
-  normal_accent = get_group_color("states", "info"), -- blue
-  insert_accent = get_group_color("states", "success"), -- green
-  visual_accent = get_group_color("states", "warning"), -- yellow
-  replace_accent = get_group_color("states", "hint"), -- orange
-  command_accent = get_group_color("states", "error"), -- red
+  normal_accent = get_group_color("modes", "normal"),
+  insert_accent = get_group_color("modes", "insert"),
+  visual_accent = get_group_color("modes", "visual"),
+  replace_accent = get_group_color("modes", "replace"),
+  command_accent = get_group_color("modes", "command"),
 
   -- Background colors
   bg_normal = get_group_color("backgrounds", "normal"),
@@ -45,7 +45,7 @@ local theme_colors = {
 
   -- Foreground colors
   fg_normal = get_group_color("foregrounds", "normal"),
-  fg_dim = get_group_color("foregrounds", "dim"),
+  fg_dark = get_group_color("foregrounds", "dark"),
 }
 
 return {
@@ -75,8 +75,8 @@ return {
     c = { bg = bg_base, fg = theme_colors.fg_normal },
   },
   inactive = {
-    a = { bg = bg_base, fg = theme_colors.fg_dim, gui = "bold" },
-    b = { bg = bg_base, fg = theme_colors.fg_dim },
-    c = { bg = bg_base, fg = theme_colors.fg_dim },
+    a = { bg = bg_base, fg = theme_colors.fg_dark, gui = "bold" },
+    b = { bg = bg_base, fg = theme_colors.fg_dark },
+    c = { bg = bg_base, fg = theme_colors.fg_dark },
   },
 }

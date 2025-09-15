@@ -396,6 +396,14 @@ require("base16-pro-max").setup({
       heading5 = "cyan",
       heading6 = "blue",
     },
+    modes = {
+      normal = "blue",
+      insert = "green",
+      visual = "yellow",
+      visual_line = "yellow",
+      replace = "cyan",
+      command = "red",
+    },
   },
 
   -- Additional highlight groups
