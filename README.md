@@ -388,6 +388,14 @@ require("base16-pro-max").setup({
       current = "orange",
       incremental = "orange",
     },
+    markdown = {
+      heading1 = "red",
+      heading2 = "orange",
+      heading3 = "yellow",
+      heading4 = "green",
+      heading5 = "cyan",
+      heading6 = "blue",
+    },
   },
 
   -- Additional highlight groups
