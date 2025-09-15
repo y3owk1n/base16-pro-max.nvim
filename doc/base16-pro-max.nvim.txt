@@ -267,6 +267,7 @@ Base16ProMax.Config.Plugins                        *Base16ProMax.Config.Plugins*
         {lewis6991_gitsigns_nvim?}                     (boolean)  Enable Git Signs
         {nvim_telescope_telescope_nvim?}               (boolean)  Enable Telescope
         {ibhagwan_fzf_lua?}                            (boolean)  Enable Fzf Lua
+        {nvim_lualine_lualine_nvim?}                   (boolean)  Enable Lualine
 
 
 Base16ProMax.Group.Raw                                  *Base16ProMax.Group.Raw*
@@ -584,6 +585,16 @@ M.validate_colors({colors})                                  *M.validate_colors*
     Returns: ~
         (boolean)   True if all required colors are present
         (string[])  Array of missing color keys
+
+
+M.has_plugin({name})                                              *M.has_plugin*
+    Check if a plugin is enabled
+
+    Parameters: ~
+        {name}  (string)  The plugin name
+
+    Returns: ~
+        (boolean)
 
 
 ==============================================================================
