@@ -152,6 +152,7 @@ local base16_alias_map = {
 ---@field git? Base16ProMax.Config.ColorGroups.Git Git colors
 ---@field search? Base16ProMax.Config.ColorGroups.Search Search colors
 ---@field markdown? Base16ProMax.Config.ColorGroups.Markdown Markdown colors
+---@field modes? Base16ProMax.Config.ColorGroups.Modes Mode colors
 
 ---@alias Base16ProMax.Config.ColorGroups.Color string|Base16ProMax.Config.ColorGroups.Color.Function
 ---@alias Base16ProMax.Config.ColorGroups.Color.Function fun(function_refs: Base16ProMax.Config.ColorGroups.Color.FunctionRefs): string
@@ -223,6 +224,14 @@ local base16_alias_map = {
 ---@field heading4? Base16ProMax.Config.ColorGroups.Color Heading 4 foreground
 ---@field heading5? Base16ProMax.Config.ColorGroups.Color Heading 5 foreground
 ---@field heading6? Base16ProMax.Config.ColorGroups.Color Heading 6 foreground
+
+---@class Base16ProMax.Config.ColorGroups.Modes
+---@field normal? Base16ProMax.Config.ColorGroups.Color Normal mode foreground
+---@field insert? Base16ProMax.Config.ColorGroups.Color Insert mode foreground
+---@field visual? Base16ProMax.Config.ColorGroups.Color Visual mode foreground
+---@field visual_line? Base16ProMax.Config.ColorGroups.Color Visual line mode foreground
+---@field replace? Base16ProMax.Config.ColorGroups.Color Replace mode foreground
+---@field command? Base16ProMax.Config.ColorGroups.Color Command mode foreground
 
 ---@class Base16ProMax.Config.Styles
 ---@field italic? boolean Enable italics
@@ -956,6 +965,7 @@ function V.validate_color_groups(color_groups)
     diff = { "added", "removed", "changed", "text" },
     search = { "match", "current", "incremental" },
     markdown = { "heading1", "heading2", "heading3", "heading4", "heading5", "heading6" },
+    modes = { "normal", "insert", "visual", "visual_line", "replace", "command" },
   }
 
   for group_name, group_config in pairs(color_groups) do
@@ -2538,6 +2548,16 @@ local default_config = {
       heading5 = "cyan",
       heading6 = "blue",
     },
+
+    -- Modes
+    modes = {
+      normal = "blue",
+      insert = "green",
+      visual = "yellow",
+      visual_line = "yellow",
+      replace = "cyan",
+      command = "red",
+    },
   },
 }
 
@@ -2721,6 +2741,16 @@ local default_config = {
 ---         heading4 = "green",
 ---         heading5 = "cyan",
 ---         heading6 = "blue",
+---       },
+---
+---       -- Modes
+---       modes = {
+---         normal = "blue",
+---         insert = "green",
+---         visual = "yellow",
+---         visual_line = "yellow",
+---         replace = "cyan",
+---         command = "red",
 ---       },
 ---     },
 ---   }
