@@ -175,7 +175,7 @@ local base16_alias_map = {
 ---@field bright? Base16ProMax.Config.ColorGroups.Color Bright foreground
 ---@field comment? Base16ProMax.Config.ColorGroups.Color Comment foreground
 ---@field line_number? Base16ProMax.Config.ColorGroups.Color Line number foreground
----@field deprecated? Base16ProMax.Config.ColorGroups.Color deprecated foreground
+---@field border? Base16ProMax.Config.ColorGroups.Color Border
 
 ---@class Base16ProMax.Config.ColorGroups.Syntax
 ---@field variable? Base16ProMax.Config.ColorGroups.Color Variable foreground
@@ -189,6 +189,7 @@ local base16_alias_map = {
 ---@field comment? Base16ProMax.Config.ColorGroups.Color Comment foreground
 ---@field operator? Base16ProMax.Config.ColorGroups.Color Operator foreground
 ---@field delimiter? Base16ProMax.Config.ColorGroups.Color Delimiter foreground
+---@field deprecated? Base16ProMax.Config.ColorGroups.Color Deprecated foreground
 
 ---@class Base16ProMax.Config.ColorGroups.States
 ---@field error? Base16ProMax.Config.ColorGroups.Color Error foreground
