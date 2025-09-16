@@ -92,11 +92,11 @@ Base16ProMax.Config.HighlightGroups.Function
 Base16ProMax.Config.HighlightGroups.FunctionRefs
 
     Fields: ~
-        {get_group_color_fn}  (fun(group:string,key:string,c:table<Base16ProMax.Group.Alias,string>):string|nil)
-        {get_bg_fn}           (fun(bg:string):string|nil)
+        {get_group_color_fn}  (fun(group:string,key:string,c:table<Base16ProMax.Group.Alias,string>):string)
+        {get_bg_fn}           (fun(bg:string):string)
         {blend_fn}            (fun(fg:string,bg:string,alpha:number):string)
-        {styles_config}       (Base16ProMax.Config.Styles)                                                        Styles configuration
-        {colors}              (table<Base16ProMax.Group.Alias,string>)                                            Semantic color palette
+        {styles_config}       (Base16ProMax.Config.Styles)                                                    Styles configuration
+        {colors}              (table<Base16ProMax.Group.Alias,string>)                                        Semantic color palette
 
 
 Base16ProMax.Config.SetupGlobals              *Base16ProMax.Config.SetupGlobals*
