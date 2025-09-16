@@ -697,15 +697,13 @@ The plugin is structured in several key modules:
 
 ### Adding Plugin Support
 
-1. Add plugin option to `Base16.Config.Plugins` type
-2. Add the plugin into `known_plugins` in `V.validate_plugins` function
-3. Create highlight function in `setup_plugins_hl`
-4. Use `U.has_plugin()` to check if integration should be applied
-5. Do not specify colors directly in highlight groups, add the colors to `default_config.color_groups` instead if really needed and use it.
-6. Follow existing patterns for consistent styling
-7. If there's a need for extra setup, add it to the help section at `@mod base16-pro-max.plugins`
-8. Test with actual plugin usage
-9. Submit pull request with documentation
+1. Add plugin option to `Base16.Config.Plugins` type in `init.lua`
+2. Add the plugin into `M.plugin_map` in `plugins/init.lua`
+3. Create a corresponding `plugin file` in `plugins` folder and set it up like others
+4. Do not specify colors directly in highlight groups, add the colors to `default_config.color_groups` instead if really needed and use it.
+5. If there's a need for extra setup, add it to the help section at `@mod base16-pro-max.plugins`
+6. Test with actual plugin usage
+7. Submit pull request with documentation
 
 ### Color Group Architecture
 
@@ -735,15 +733,6 @@ We welcome contributions! Here's how to get started:
 - Test with real plugin usage scenarios
 - Update documentation for new features
 - Write clear commit messages
-
-### Pull Request Process
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes with proper testing
-4. Update documentation if needed
-5. Submit pull request with description
-6. Respond to review feedback
 
 ### Areas for Contribution
 
