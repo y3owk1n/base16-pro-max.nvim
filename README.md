@@ -631,7 +631,7 @@ local stats = yaml_parser.get_cache_stats()
 
 ## 🔌 Supported Plugins
 
-- **Mini.nvim**: Icons, Diff, Files, Pick
+- **Mini.nvim**: Icons, Diff, Files, Pick, Statusline
 - **Blink.cmp**: Completion menu styling
 - **RenderMarkdown**: Enhanced markdown rendering
 - **Undo Glow**: Undo visualization

@@ -253,6 +253,7 @@ local base16_alias_map = {
 ---@field nvim_mini_mini_diff? boolean Enable Mini Diff
 ---@field nvim_mini_mini_files? boolean Enable Mini Files
 ---@field nvim_mini_mini_pick? boolean Enable Mini Pick
+---@field nvim_mini_mini_statusline? boolean Enable Mini Statusline
 ---@field meandering_programmer_render_markdown_nvim? boolean Enable Render Markdown
 ---@field y3owk1n_undo_glow_nvim? boolean Enable Undo Glow
 ---@field y3owk1n_time_machine_nvim? boolean Enable Time Machine
@@ -887,6 +888,7 @@ function V.validate_plugins(plugins)
     "nvim_mini_mini_diff",
     "nvim_mini_mini_files",
     "nvim_mini_mini_pick",
+    "nvim_mini_mini_statusline",
     "meandering_programmer_render_markdown_nvim",
     "y3owk1n_undo_glow_nvim",
     "y3owk1n_time_machine_nvim",
@@ -965,7 +967,7 @@ function V.validate_color_groups(color_groups)
     diff = { "added", "removed", "changed", "text" },
     search = { "match", "current", "incremental" },
     markdown = { "heading1", "heading2", "heading3", "heading4", "heading5", "heading6" },
-    modes = { "normal", "insert", "visual", "visual_line", "replace", "command" },
+    modes = { "normal", "insert", "visual", "visual_line", "replace", "command", "other" },
   }
 
   for group_name, group_config in pairs(color_groups) do
@@ -2019,6 +2021,46 @@ local function setup_plugins_hl(highlights, c)
     }
   end
 
+  -- Mini Statusline - `https://github.com/echasnovski/mini.statusline`
+  if U.has_plugin("nvim_mini_mini_statusline") then
+    highlights.MiniStatuslineDevinfo = { fg = U.get_group_color("foregrounds", "dark", c) }
+    highlights.MiniStatuslineFileinfo = { fg = U.get_group_color("foregrounds", "dark", c) }
+    highlights.MiniStatuslineFilename = {
+      fg = U.get_group_color("modes", "normal", c),
+    }
+    highlights.MiniStatuslineInactive = { link = "StatuslineNC" }
+    highlights.MiniStatuslineModeNormal = {
+      fg = U.get_group_color("backgrounds", "normal", c),
+      bg = U.get_group_color("modes", "normal", c),
+      bold = M.config.styles.bold,
+    }
+    highlights.MiniStatuslineModeInsert = {
+      fg = U.get_group_color("backgrounds", "normal", c),
+      bg = U.get_group_color("modes", "insert", c),
+      bold = M.config.styles.bold,
+    }
+    highlights.MiniStatuslineModeVisual = {
+      fg = U.get_group_color("backgrounds", "normal", c),
+      bg = U.get_group_color("modes", "visual", c),
+      bold = M.config.styles.bold,
+    }
+    highlights.MiniStatuslineModeReplace = {
+      fg = U.get_group_color("backgrounds", "normal", c),
+      bg = U.get_group_color("modes", "replace", c),
+      bold = M.config.styles.bold,
+    }
+    highlights.MiniStatuslineModeCommand = {
+      fg = U.get_group_color("backgrounds", "normal", c),
+      bg = U.get_group_color("modes", "command", c),
+      bold = M.config.styles.bold,
+    }
+    highlights.MiniStatuslineModeOther = {
+      fg = U.get_group_color("backgrounds", "normal", c),
+      bg = U.get_group_color("modes", "other", c),
+      bold = M.config.styles.bold,
+    }
+  end
+
   -- Render Markdown - `https://github.com/MeanderingProgrammer/render-markdown.nvim`
   if U.has_plugin("meandering_programmer_render_markdown_nvim") then
     for i = 1, 6 do
@@ -2557,6 +2599,7 @@ local default_config = {
       visual_line = "yellow",
       replace = "cyan",
       command = "red",
+      other = "brown",
     },
   },
 }
