@@ -270,6 +270,7 @@ Base16ProMax.Config.Plugins                        *Base16ProMax.Config.Plugins*
         {nvim_mini_mini_diff?}                         (boolean)  Enable Mini Diff
         {nvim_mini_mini_files?}                        (boolean)  Enable Mini Files
         {nvim_mini_mini_pick?}                         (boolean)  Enable Mini Pick
+        {nvim_mini_mini_statusline?}                   (boolean)  Enable Mini Statusline
         {meandering_programmer_render_markdown_nvim?}  (boolean)  Enable Render Markdown
         {y3owk1n_undo_glow_nvim?}                      (boolean)  Enable Undo Glow
         {y3owk1n_time_machine_nvim?}                   (boolean)  Enable Time Machine
