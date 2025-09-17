@@ -1,3 +1,48 @@
+---@mod base16-pro-max.plugins Plugin Integrations
+
+---@brief [[
+---# Plugin Integrations ~
+---
+---This module contains the plugin integrations for `base16-pro-max.nvim`.
+---All integrations are disabled by default, but can be enabled in the config.
+---
+--->lua
+---   require("base16-pro-max").setup({
+---     plugins = {
+---       enable_all = true,
+---     },
+---   })
+---<
+---
+---Or you can enable them individually:
+---
+--->lua
+---   require("base16-pro-max").setup({
+---     plugins = {
+---       enable_all = false,
+---       nvim_mini_mini_icons = true
+---     },
+---   })
+---<
+---
+---## Available Plugins Integrations ~
+---
+---See also |Base16ProMax.Config.Plugins| for all the plugins that can be enabled or disabled.
+---
+---Below only shows help for plugins that requires extra setup.
+---
+---### Lualine ~
+---
+--->lua
+---   require("lualine").setup({
+---     options = {
+---       theme = "base16-pro-max",
+---     },
+---   })
+---<
+---
+---@brief ]]
+
 local M = {}
 
 ---@type string[]
