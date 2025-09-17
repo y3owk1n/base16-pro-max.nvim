@@ -6,7 +6,7 @@ local M = {}
 function M.setup(highlights, c)
   local get_group_color = require("base16-pro-max.lib.colors").get_group_color
   local get_bg = require("base16-pro-max.lib.colors").get_bg
-  local config = require("base16-pro-max").config
+  local config = require("base16-pro-max.config").config
 
   -- Normal and floating windows
   highlights.Normal = {

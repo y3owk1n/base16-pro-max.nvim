@@ -5,7 +5,7 @@ local M = {}
 ---@param c table<Base16ProMax.Group.Alias, string>
 function M.setup(highlights, c)
   local get_group_color = require("base16-pro-max.lib.colors").get_group_color
-  local config = require("base16-pro-max").config
+  local config = require("base16-pro-max.config").config
 
   highlights.ErrorMsg = {
     fg = get_group_color("states", "error", c),

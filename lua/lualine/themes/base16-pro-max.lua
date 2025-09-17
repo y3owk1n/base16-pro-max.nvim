@@ -23,7 +23,9 @@ local function get_group_color(group, key)
 end
 
 local function get_bg()
-  if base16_pro_max.config and base16_pro_max.config.styles.transparency then
+  local config = require("base16-pro-max.config").config
+
+  if config and config.styles.transparency then
     return "NONE"
   end
   return get_group_color("backgrounds", "dim")
