@@ -74,7 +74,7 @@ function M.get_semantic_colors()
   end
 
   -- Create and cache the semantic palette
-  _color_cache = require("bas16-pro-max.lib.colors").add_semantic_palette(config.colors)
+  _color_cache = require("base16-pro-max.lib.colors").add_semantic_palette(config.colors)
   return _color_cache
 end
 
