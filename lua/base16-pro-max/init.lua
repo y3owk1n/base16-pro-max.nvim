@@ -62,14 +62,13 @@ local V = {}
 
 local U = {}
 
+local blend = require("base16-pro-max.utils.colors-manipulation").blend
+
 -- ------------------------------------------------------------------
 -- States & caches
 -- ------------------------------------------------------------------
 
 local did_setup = false
-
----@type table<string, string>|nil
-local _blend_cache = nil
 
 ---@type Base16ProMax.Group.Alias[]|nil
 local _base16_aliases = nil
@@ -79,12 +78,6 @@ local _base16_raw = nil
 
 ---@type table<string, string>|nil
 local _color_cache = nil
-
----@type table<number, { r: integer, g: integer, b: integer }>|nil
-local _cterm_cache = nil
-
----@type table<string, integer|"NONE">
-local _hex_to_cterm_cache = {}
 
 ---@type table<string, vim.api.keyset.highlight>|nil
 local _computed_highlights_cache = nil
@@ -117,177 +110,6 @@ local base16_alias_map = {
 -- ------------------------------------------------------------------
 -- Utility
 -- ------------------------------------------------------------------
-
----@private
----Convert a color name to RGB values
----@param hex string
----@return {r: integer, g: integer, b: integer}|nil rgb The RGB values, or nil if not a valid hex color
-function U.hex_to_rgb(hex)
-  if hex == "NONE" then
-    return nil
-  end
-
-  if #hex ~= 7 or hex:sub(1, 1) ~= "#" then
-    return nil
-  end
-
-  local r = tonumber(hex:sub(2, 3), 16)
-  local g = tonumber(hex:sub(4, 5), 16)
-  local b = tonumber(hex:sub(6, 7), 16)
-
-  if not r or not g or not b then
-    return nil
-  end
-
-  return { r = r, g = g, b = b }
-end
-
----@private
----Build cterm colors
----@return table<number, { r: integer, g: integer, b: integer }>
-function U.build_cterm_colors()
-  local cterm_palette = {}
-
-  local ansi = {
-    { 0, 0, 0 },
-    { 128, 0, 0 },
-    { 0, 128, 0 },
-    { 128, 128, 0 },
-    { 0, 0, 128 },
-    { 128, 0, 128 },
-    { 0, 128, 128 },
-    { 192, 192, 192 },
-    { 128, 128, 128 },
-    { 255, 0, 0 },
-    { 0, 255, 0 },
-    { 255, 255, 0 },
-    { 0, 0, 255 },
-    { 255, 0, 255 },
-    { 0, 255, 255 },
-    { 255, 255, 255 },
-  }
-  for i, rgb in ipairs(ansi) do
-    cterm_palette[i - 1] = { r = rgb[1], g = rgb[2], b = rgb[3] }
-  end
-
-  -- 6×6×6 color cube (index 16–231)
-  local index = 16
-  for r = 0, 5 do
-    for g = 0, 5 do
-      for b = 0, 5 do
-        local function level(v)
-          return v == 0 and 0 or v * 40 + 55
-        end
-        cterm_palette[index] = { r = level(r), g = level(g), b = level(b) }
-        index = index + 1
-      end
-    end
-  end
-
-  -- Grayscale ramp (index 232–255)
-  for i = 0, 23 do
-    local level = 8 + i * 10
-    cterm_palette[index] = { r = level, g = level, b = level }
-    index = index + 1
-  end
-
-  return cterm_palette
-end
-
----@private
----Get the rgb to cterm256 table
----@return table<number, { r: integer, g: integer, b: integer }>
-function U.get_rgb_to_cterm()
-  if not _cterm_cache then
-    _cterm_cache = U.build_cterm_colors()
-  end
-  return _cterm_cache
-end
-
----Find the nearest cterm256 color index by Manhattan distance
----@param rgb {r: integer, g: integer, b: integer}
----@return integer|nil
-function U.get_nearest_cterm(rgb)
-  local nearest_id = nil
-  local nearest_distance = math.huge
-
-  for id, c in pairs(U.get_rgb_to_cterm()) do
-    local distance = math.abs(rgb.r - c.r) + math.abs(rgb.g - c.g) + math.abs(rgb.b - c.b)
-    if distance < nearest_distance then
-      nearest_id, nearest_distance = id, distance
-    end
-  end
-  return nearest_id
-end
-
----@private
----Convert a hex color to a cterm256 color
----@param hex string The hex color
----@return integer|"NONE" cterm256 The cterm256 color
-function U.hex_to_cterm256(hex)
-  if hex == "NONE" then
-    return "NONE"
-  end
-
-  if _hex_to_cterm_cache[hex] then
-    return _hex_to_cterm_cache[hex]
-  end
-
-  local r = tonumber(hex:sub(2, 3), 16)
-  local g = tonumber(hex:sub(4, 5), 16)
-  local b = tonumber(hex:sub(6, 7), 16)
-
-  if not r or not g or not b then
-    _hex_to_cterm_cache[hex] = "NONE"
-    return "NONE"
-  end
-
-  local nearest = U.get_nearest_cterm({ r = r, g = g, b = b }) or "NONE"
-
-  _hex_to_cterm_cache[hex] = nearest
-
-  return nearest
-end
-
----@private
----@param fg string Foreground color
----@param bg string Background color
----@param alpha number Between 0 (background) and 1 (foreground)
----@return string blended_color The blended color as hex
-function U.blend(fg, bg, alpha)
-  local cache_key = fg .. bg .. alpha
-
-  if not _blend_cache then
-    _blend_cache = {}
-  end
-
-  if _blend_cache[cache_key] then
-    return _blend_cache[cache_key]
-  end
-
-  local fg_rgb = U.hex_to_rgb(fg)
-  local bg_rgb = U.hex_to_rgb(bg)
-
-  if not fg_rgb or not bg_rgb then
-    _blend_cache[cache_key] = "NONE"
-    return "NONE"
-  end
-
-  local function blend_channel(fg_val, bg_val)
-    local result = alpha * fg_val + (1 - alpha) * bg_val
-    return math.floor(math.min(math.max(0, result), 255) + 0.5)
-  end
-
-  local result = string.format(
-    "#%02X%02X%02X",
-    blend_channel(fg_rgb.r, bg_rgb.r),
-    blend_channel(fg_rgb.g, bg_rgb.g),
-    blend_channel(fg_rgb.b, bg_rgb.b)
-  )
-
-  _blend_cache[cache_key] = result
-  return result
-end
 
 ---@private
 ---Add semantic aliases to the raw colors
@@ -340,7 +162,7 @@ function U.get_group_color(group, key, c)
   local color_value = color_group[key]
   if type(color_value) == "function" then
     local function_refs = {
-      blend_fn = U.blend,
+      blend_fn = blend,
       colors = c,
     }
     return color_value(function_refs)
@@ -1121,13 +943,13 @@ local function setup_popup_hl(highlights, c)
   }
   highlights.PmenuKindSel = {
     fg = U.get_group_color("syntax", "keyword", c),
-    bg = U.blend(U.get_group_color("syntax", "function_name", c), U.get_group_color("backgrounds", "normal", c), 0.3),
+    bg = blend(U.get_group_color("syntax", "function_name", c), U.get_group_color("backgrounds", "normal", c), 0.3),
     bold = M.config.styles.bold,
   }
   highlights.PmenuExtra = { fg = U.get_group_color("foregrounds", "dim", c) }
   highlights.PmenuExtraSel = {
     fg = U.get_group_color("foregrounds", "dim", c),
-    bg = U.blend(U.get_group_color("syntax", "function_name", c), U.get_group_color("backgrounds", "normal", c), 0.3),
+    bg = blend(U.get_group_color("syntax", "function_name", c), U.get_group_color("backgrounds", "normal", c), 0.3),
   }
 end
 
@@ -1407,22 +1229,22 @@ local function setup_treesitter_hl(highlights, c)
   highlights["@comment.documentation"] = { link = "Comment" }
   highlights["@comment.todo"] = {
     fg = U.get_group_color("syntax", "type", c),
-    bg = U.blend(U.get_group_color("syntax", "type", c), U.get_group_color("backgrounds", "normal", c), 0.1),
+    bg = blend(U.get_group_color("syntax", "type", c), U.get_group_color("backgrounds", "normal", c), 0.1),
     bold = M.config.styles.bold,
   }
   highlights["@comment.note"] = {
     fg = U.get_group_color("states", "info", c),
-    bg = U.blend(U.get_group_color("states", "info", c), U.get_group_color("backgrounds", "normal", c), 0.1),
+    bg = blend(U.get_group_color("states", "info", c), U.get_group_color("backgrounds", "normal", c), 0.1),
     bold = M.config.styles.bold,
   }
   highlights["@comment.warning"] = {
     fg = U.get_group_color("states", "warning", c),
-    bg = U.blend(U.get_group_color("states", "warning", c), U.get_group_color("backgrounds", "normal", c), 0.1),
+    bg = blend(U.get_group_color("states", "warning", c), U.get_group_color("backgrounds", "normal", c), 0.1),
     bold = M.config.styles.bold,
   }
   highlights["@comment.error"] = {
     fg = U.get_group_color("states", "error", c),
-    bg = U.blend(U.get_group_color("states", "error", c), U.get_group_color("backgrounds", "normal", c), 0.1),
+    bg = blend(U.get_group_color("states", "error", c), U.get_group_color("backgrounds", "normal", c), 0.1),
     bold = M.config.styles.bold,
   }
 
@@ -1700,7 +1522,7 @@ local function setup_plugins_hl(highlights, c)
   local function_refs = {
     get_group_color_fn = U.get_group_color,
     get_bg_fn = U.get_bg,
-    blend_fn = U.blend,
+    blend_fn = blend,
     styles_config = M.config.styles,
     colors = c,
   }
@@ -1767,7 +1589,7 @@ local function apply_highlights()
     local function_refs = {
       get_group_color_fn = U.get_group_color,
       get_bg_fn = U.get_bg,
-      blend_fn = U.blend,
+      blend_fn = blend,
       styles_config = M.config.styles,
       colors = c,
     }
@@ -1820,7 +1642,7 @@ local function apply_highlights()
     if opts.blend ~= nil and (opts.blend >= 0 and opts.blend <= 100) and opts.bg ~= nil then
       local bg_hex = c[opts.bg] or opts.bg
       ---@diagnostic disable-next-line: param-type-mismatch
-      opts.bg = U.blend(bg_hex, opts.blend_on or c.bg, opts.blend / 100)
+      opts.bg = blend(bg_hex, opts.blend_on or c.bg, opts.blend / 100)
     end
 
     opts.blend = nil
@@ -1834,13 +1656,14 @@ local function apply_highlights()
     end
 
     if M.config.styles.use_cterm then
+      local hex_to_cterm256 = require("base16-pro-max.utils.colors-converter").hex_to_cterm256
       if opts.fg then
         ---@diagnostic disable-next-line: param-type-mismatch
-        opts.ctermfg = U.hex_to_cterm256(opts.fg)
+        opts.ctermfg = hex_to_cterm256(opts.fg)
       end
       if opts.bg then
         ---@diagnostic disable-next-line: param-type-mismatch
-        opts.ctermbg = U.hex_to_cterm256(opts.bg)
+        opts.ctermbg = hex_to_cterm256(opts.bg)
       end
     end
 
@@ -2231,7 +2054,7 @@ function M.setup(user_config)
         for key, color_value in pairs(group_config) do
           if type(color_value) == "function" then
             local function_refs = {
-              blend_fn = U.blend,
+              blend_fn = blend,
               colors = test_colors,
             }
             local success, result = pcall(color_value, function_refs)
@@ -2416,10 +2239,13 @@ function M._invalidate_cache()
     return
   end
 
+  local cterm = require("base16-pro-max.utils.cterm")
+  local manipulation = require("base16-pro-max.utils.colors-manipulation")
+
+  cterm._invalidate_cache()
+  manipulation._invalidate_cache()
+
   _color_cache = nil
-  _blend_cache = nil
-  _cterm_cache = nil
-  _hex_to_cterm_cache = {}
   _computed_highlights_cache = nil
 end
 
