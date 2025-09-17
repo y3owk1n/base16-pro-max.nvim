@@ -69,7 +69,7 @@ M.plugin_map = {
 ---Check if a plugin is enabled in config
 ---@param name string The plugin name
 function M.has_plugin(name)
-  local config = require("base16-pro-max").config
+  local config = require("base16-pro-max.config").config
 
   local plugin = config.plugins[name]
 
