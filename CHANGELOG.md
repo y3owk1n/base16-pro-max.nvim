@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.1.0](https://github.com/y3owk1n/base16-pro-max.nvim/compare/v1.0.0...v1.1.0) (2025-09-17)
+
+
+### Features
+
+* add a `parser` module for yaml parser ([#28](https://github.com/y3owk1n/base16-pro-max.nvim/issues/28)) ([452b2fb](https://github.com/y3owk1n/base16-pro-max.nvim/commit/452b2fbdce50a8e2a803bd30b10aaa8a16a48310))
+* allow `config.highlight_group` to be table or function ([#31](https://github.com/y3owk1n/base16-pro-max.nvim/issues/31)) ([a31ebb4](https://github.com/y3owk1n/base16-pro-max.nvim/commit/a31ebb443cfcbb9b85c781915f4b90b7e6a358ef))
+* **config:** add `modes` to `color_groups` opts for lualine and any other statusline integration ([#44](https://github.com/y3owk1n/base16-pro-max.nvim/issues/44)) ([d6da9e9](https://github.com/y3owk1n/base16-pro-max.nvim/commit/d6da9e9cdbadfc260cc9abc5746a72ddb401486b))
+* configurable border in colors groups ([#37](https://github.com/y3owk1n/base16-pro-max.nvim/issues/37)) ([07bcf6d](https://github.com/y3owk1n/base16-pro-max.nvim/commit/07bcf6d5aadab81a9ed01bfcf242a94833ba25ba))
+* configurable markdown headings (1-6) ([#40](https://github.com/y3owk1n/base16-pro-max.nvim/issues/40)) ([fb533b7](https://github.com/y3owk1n/base16-pro-max.nvim/commit/fb533b7f67e92dc8085a22de7b622e4b0c6a0d68))
+* **plugins.mini-diff:** add `Over` highlights for overlay ([#59](https://github.com/y3owk1n/base16-pro-max.nvim/issues/59)) ([5472cbc](https://github.com/y3owk1n/base16-pro-max.nvim/commit/5472cbc029982536c962b501d0cbd923370e6542))
+* **plugins:** add `fzf-lua` integration ([#41](https://github.com/y3owk1n/base16-pro-max.nvim/issues/41)) ([86bab2c](https://github.com/y3owk1n/base16-pro-max.nvim/commit/86bab2ccea2168a323c1e76a01ac5db4b325f19f))
+* **plugins:** add `lualine` ([#42](https://github.com/y3owk1n/base16-pro-max.nvim/issues/42)) ([90ae665](https://github.com/y3owk1n/base16-pro-max.nvim/commit/90ae665dc52f430d3adae968db64987d6cccdb2c))
+* **plugins:** add `mini.statusline` ([#48](https://github.com/y3owk1n/base16-pro-max.nvim/issues/48)) ([33a6727](https://github.com/y3owk1n/base16-pro-max.nvim/commit/33a67270f752ccb6ef6f77a8f6eb962dbad0052c))
+* **plugins:** add `Telescope` integration ([#36](https://github.com/y3owk1n/base16-pro-max.nvim/issues/36)) ([ba6501b](https://github.com/y3owk1n/base16-pro-max.nvim/commit/ba6501b39e0314b3e92a7c2cb72d8fd20ed9d181))
+
+
+### Bug Fixes
+
+* better contrast for default statusline highlights ([#45](https://github.com/y3owk1n/base16-pro-max.nvim/issues/45)) ([16e09de](https://github.com/y3owk1n/base16-pro-max.nvim/commit/16e09de8c4e4f91f098fd4fdcb02163560b0ca4e))
+* **mini.pick:** link `bordertext` and `cursorline`, update `infoheader` to md h1 ([#38](https://github.com/y3owk1n/base16-pro-max.nvim/issues/38)) ([798e2f9](https://github.com/y3owk1n/base16-pro-max.nvim/commit/798e2f945c51ccd59c440cb99e64cb7831bb89ec))
+* **plugins.grugfar:** remove unnecassary mappings, the default looks nice ([#51](https://github.com/y3owk1n/base16-pro-max.nvim/issues/51)) ([4cd161b](https://github.com/y3owk1n/base16-pro-max.nvim/commit/4cd161b131217b727705c4c1535a026a30c432d8))
+* remove public `M.blend` function ([#35](https://github.com/y3owk1n/base16-pro-max.nvim/issues/35)) ([83dfe42](https://github.com/y3owk1n/base16-pro-max.nvim/commit/83dfe42a997ad9f69f24dab2e07b104df86e97af))
+* standardize `color_groups` function opts similar to `highlight_groups` ([#32](https://github.com/y3owk1n/base16-pro-max.nvim/issues/32)) ([2cc50e5](https://github.com/y3owk1n/base16-pro-max.nvim/commit/2cc50e5d0b10302597eeff625ea614e4019f7e53))
+* **types:** add `border` and move `deprecated` to the right section ([#39](https://github.com/y3owk1n/base16-pro-max.nvim/issues/39)) ([4699def](https://github.com/y3owk1n/base16-pro-max.nvim/commit/4699defd65d24561e8206f354d003368a5075497))
+* typo on import module ([#58](https://github.com/y3owk1n/base16-pro-max.nvim/issues/58)) ([9051384](https://github.com/y3owk1n/base16-pro-max.nvim/commit/9051384af098eea1c485a3af9ed13fda66db8715))
+* update missing validations for `color_groups` ([#50](https://github.com/y3owk1n/base16-pro-max.nvim/issues/50)) ([2bbff85](https://github.com/y3owk1n/base16-pro-max.nvim/commit/2bbff85f738234d8a949a8129e881e5bb051c351))
+
 ## 1.0.0 (2025-09-13)
 
 
