@@ -566,7 +566,8 @@ Base16ProMax.Config.ColorGroups.Search  *Base16ProMax.Config.ColorGroups.Search*
         {incremental?}  (Base16ProMax.Config.ColorGroups.Color)  Incremental match foreground
 
 
-Base16ProMax.Config.ColorGroups.Markdown*Base16ProMax.Config.ColorGroups.Markdown*
+                                      *Base16ProMax.Config.ColorGroups.Markdown*
+Base16ProMax.Config.ColorGroups.Markdown
 
     Fields: ~
         {heading1?}  (Base16ProMax.Config.ColorGroups.Color)  Heading 1 foreground
