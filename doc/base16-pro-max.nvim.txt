@@ -401,7 +401,7 @@ M.plugin_map                                                      *M.plugin_map*
 M.setup({highlights}, {function_refs})                                 *M.setup*
 
     Parameters: ~
-        {highlights}     (table<string,vim.api.keyset.highlight>)
+        {highlights}     (table<string,Base16ProMax.HighlightOpts>)
         {function_refs}  (Base16ProMax.Config.HighlightGroups.FunctionRefs)
 
 
@@ -411,20 +411,43 @@ Types                                                     *base16-pro-max.types*
 Base16ProMax.Config                                        *Base16ProMax.Config*
 
     Fields: ~
-        {colors}             (table<Base16ProMax.Group.Raw,string>)                                                          Colors to override
-        {styles?}            (Base16ProMax.Config.Styles)                                                                    Styles to override
-        {highlight_groups?}  (Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function)        Additional highlight groups to set
-        {before_highlight?}  (fun(group:string,opts:vim.api.keyset.highlight,c:table<Base16ProMax.Group.Alias,string>):nil)  Callback to run before setting highlight groups
-        {plugins?}           (Base16ProMax.Config.Plugins)                                                                   Enable/disable plugins
-        {color_groups?}      (Base16ProMax.Config.ColorGroups)                                                               Color groups to override
-        {setup_globals?}     (Base16ProMax.Config.SetupGlobals)                                                              Setup globals
+        {colors?}            (table<Base16ProMax.Group.Raw,string>)                                                            Colors to override
+        {styles?}            (Base16ProMax.Config.Styles)                                                                      Styles to override
+        {highlight_groups?}  (Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function)          Additional highlight groups to set
+        {before_highlight?}  (fun(group:string,opts:Base16ProMax.HighlightOpts,c:table<Base16ProMax.Group.Alias,string>):nil)  Callback to run before setting highlight groups
+        {plugins?}           (Base16ProMax.Config.Plugins)                                                                     Enable/disable plugins
+        {color_groups?}      (Base16ProMax.Config.ColorGroups)                                                                 Color groups to override
+        {setup_globals?}     (Base16ProMax.Config.SetupGlobals)                                                                Setup globals
+
+
+Base16ProMax.HighlightOpts                          *Base16ProMax.HighlightOpts*
+
+    Fields: ~
+        {fg?}             (string)   Foreground color
+        {bg?}             (string)   Background color
+        {sp?}             (string)   Special color
+        {blend?}          (number)   Blend value (0-100)
+        {bold?}           (boolean)  Bold text
+        {italic?}         (boolean)  Italic text
+        {underline?}      (boolean)  Underline text
+        {undercurl?}      (boolean)  Undercurl text
+        {underdouble?}    (boolean)  Double underline text
+        {underdotted?}    (boolean)  Dotted underline text
+        {underdashed?}    (boolean)  Dashed underline text
+        {strikethrough?}  (boolean)  Strikethrough text
+        {reverse?}        (boolean)  Reverse video
+        {standout?}       (boolean)  Standout mode
+        {link?}           (string)   Link to another highlight group
+        {blend_on?}       (string)   Background to blend on
+        {_nvim_blend?}    (number)   Internal blend value
+        {ctermfg?}        (number|)
 
 
                                      *Base16ProMax.Config.HighlightGroups.Table*
 Base16ProMax.Config.HighlightGroups.Table
 
     Type: ~
-        table<string,vim.api.keyset.highlight>
+        table<string,Base16ProMax.HighlightOpts>
 
 
                                   *Base16ProMax.Config.HighlightGroups.Function*
