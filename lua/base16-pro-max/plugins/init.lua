@@ -80,7 +80,7 @@ function M.has_plugin(name)
   return plugin
 end
 
----@param highlights table<string, vim.api.keyset.highlight>
+---@param highlights table<string, Base16ProMax.HighlightOpts>
 ---@param function_refs Base16ProMax.Config.HighlightGroups.FunctionRefs
 function M.setup(highlights, function_refs)
   for _, plugin in ipairs(M.plugin_map) do
