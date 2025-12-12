@@ -2,7 +2,7 @@ local M = {}
 
 M.url = "https://github.com/nvim-mini/mini.pick"
 
----@param highlights table<string, vim.api.keyset.highlight>
+---@param highlights table<string, Base16ProMax.HighlightOpts>
 ---@param function_refs Base16ProMax.Config.HighlightGroups.FunctionRefs
 function M.setup(highlights, function_refs)
   local get_group_color = function_refs.get_group_color_fn

@@ -1,6 +1,6 @@
 local M = {}
 
----@type table<string, vim.api.keyset.highlight>|nil
+---@type table<string, Base16ProMax.HighlightOpts>|nil
 local _computed_highlights_cache = nil
 
 local blend = require("base16-pro-max.utils.colors-manipulation").blend
@@ -10,7 +10,7 @@ local get_base16_raw = require("base16-pro-max.lib.base16").get_base16_raw
 
 ---@private
 ---Setup plugin highlights
----@param highlights table<string, vim.api.keyset.highlight>
+---@param highlights table<string, Base16ProMax.HighlightOpts>
 ---@param c table<Base16ProMax.Group.Alias, string>
 local function setup_plugins_hl(highlights, c)
   local config = require("base16-pro-max.config").config
@@ -29,13 +29,13 @@ end
 ---@private
 ---Pre-compute highlights
 ---@param c table<Base16ProMax.Group.Alias, string>
----@return table<string, vim.api.keyset.highlight>
+---@return table<string, Base16ProMax.HighlightOpts>
 local function compute_highlights(c)
   if _computed_highlights_cache then
     return _computed_highlights_cache
   end
 
-  ---@type table<string, vim.api.keyset.highlight>
+  ---@type table<string, Base16ProMax.HighlightOpts>
   local highlights = {}
 
   -- Apply highlights in logical groups
@@ -104,7 +104,9 @@ function M.apply_highlights()
       local existing = highlights[group] or {}
 
       -- Handle link references
+      ---@diagnostic disable-next-line: undefined-field
       while existing.link do
+        ---@diagnostic disable-next-line: undefined-field
         existing = highlights[existing.link] or {}
       end
 
@@ -139,30 +141,35 @@ function M.apply_highlights()
     end
 
     -- Process blend values
+    ---@diagnostic disable-next-line: undefined-field
     if opts.blend ~= nil and (opts.blend >= 0 and opts.blend <= 100) and opts.bg ~= nil then
+      ---@diagnostic disable-next-line: undefined-field
       local bg_hex = c[opts.bg] or opts.bg
-      ---@diagnostic disable-next-line: param-type-mismatch
+      ---@diagnostic disable-next-line: inject-field,param-type-mismatch
       opts.bg = blend(bg_hex, opts.blend_on or c.bg, opts.blend / 100)
     end
 
+    ---@diagnostic disable-next-line: inject-field
     opts.blend = nil
     ---@diagnostic disable-next-line: inject-field
     opts.blend_on = nil
 
     ---@diagnostic disable-next-line: undefined-field
     if opts._nvim_blend ~= nil then
-      ---@diagnostic disable-next-line: undefined-field
+      ---@diagnostic disable-next-line: inject-field
       opts.blend = opts._nvim_blend
     end
 
     if config.styles.use_cterm then
       local hex_to_cterm256 = require("base16-pro-max.utils.colors-converter").hex_to_cterm256
+      ---@diagnostic disable-next-line: undefined-field
       if opts.fg then
-        ---@diagnostic disable-next-line: param-type-mismatch
+        ---@diagnostic disable-next-line: inject-field
         opts.ctermfg = hex_to_cterm256(opts.fg)
       end
+      ---@diagnostic disable-next-line: undefined-field
       if opts.bg then
-        ---@diagnostic disable-next-line: param-type-mismatch
+        ---@diagnostic disable-next-line: inject-field
         opts.ctermbg = hex_to_cterm256(opts.bg)
       end
     end

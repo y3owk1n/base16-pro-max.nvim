@@ -1,7 +1,7 @@
 local M = {}
 
 ---Setup treesitter highlights
----@param highlights table<string, vim.api.keyset.highlight>
+---@param highlights table<string, Base16ProMax.HighlightOpts>
 ---@param c table<Base16ProMax.Group.Alias, string>
 function M.setup(highlights, c)
   local get_group_color = require("base16-pro-max.lib.colors").get_group_color

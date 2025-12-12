@@ -3,15 +3,36 @@ local M = {}
 ---@mod base16-pro-max.types Types
 
 ---@class Base16ProMax.Config
----@field colors table<Base16ProMax.Group.Raw, string> Colors to override
+---@field colors? table<Base16ProMax.Group.Raw, string> Colors to override
 ---@field styles? Base16ProMax.Config.Styles Styles to override
 ---@field highlight_groups? Base16ProMax.Config.HighlightGroups.Table|Base16ProMax.Config.HighlightGroups.Function  Additional highlight groups to set
----@field before_highlight? fun(group: string, opts: vim.api.keyset.highlight, c: table<Base16ProMax.Group.Alias, string>): nil Callback to run before setting highlight groups
+---@field before_highlight? fun(group: string, opts: Base16ProMax.HighlightOpts, c: table<Base16ProMax.Group.Alias, string>): nil Callback to run before setting highlight groups
 ---@field plugins? Base16ProMax.Config.Plugins Enable/disable plugins
 ---@field color_groups? Base16ProMax.Config.ColorGroups Color groups to override
 ---@field setup_globals? Base16ProMax.Config.SetupGlobals Setup globals
 
----@alias Base16ProMax.Config.HighlightGroups.Table table<string, vim.api.keyset.highlight>
+---@class Base16ProMax.HighlightOpts
+---@field fg? string Foreground color
+---@field bg? string Background color
+---@field sp? string Special color
+---@field blend? number Blend value (0-100)
+---@field bold? boolean Bold text
+---@field italic? boolean Italic text
+---@field underline? boolean Underline text
+---@field undercurl? boolean Undercurl text
+---@field underdouble? boolean Double underline text
+---@field underdotted? boolean Dotted underline text
+---@field underdashed? boolean Dashed underline text
+---@field strikethrough? boolean Strikethrough text
+---@field reverse? boolean Reverse video
+---@field standout? boolean Standout mode
+---@field link? string Link to another highlight group
+---@field blend_on? string Background to blend on
+---@field _nvim_blend? number Internal blend value
+---@field ctermfg? number|"NONE" cterm foreground
+---@field ctermbg? number|"NONE" cterm background
+
+---@alias Base16ProMax.Config.HighlightGroups.Table table<string, Base16ProMax.HighlightOpts>
 ---@alias Base16ProMax.Config.HighlightGroups.Function fun(function_refs: Base16ProMax.Config.HighlightGroups.FunctionRefs): Base16ProMax.Config.HighlightGroups.Table
 
 ---@class Base16ProMax.Config.HighlightGroups.FunctionRefs
