@@ -1,4 +1,4 @@
----@mod base16-pro-max.parser YAML parser for base16-pro-max
+---@mod base16-pro-max.parser YAML/JSON parser for base16-pro-max
 
 ---@brief [[
 ---# Module setup ~
@@ -8,15 +8,18 @@
 ---
 ---# Usage ~
 ---
---->lua
----  local yaml_parser = require("base16-pro-max.parser")
+---->lua
+---  local parser = require("base16-pro-max.parser")
 ---
 ---  -- Load from YAML file
----  local colors = yaml_parser.get_base16_colors("~/schemes/gruvbox.yaml")
+---  local colors = parser.get_base16_colors("~/schemes/gruvbox.yaml")
 ---
----  -- Mix YAML colors with manual overrides
+---  -- Load from JSON file (e.g. Stylix palette.json)
+---  local colors = parser.get_base16_colors("~/.config/stylix/palette.json")
+---
+---  -- Mix parsed colors with manual overrides
 ---  local colors = vim.tbl_extend("force",
----    yaml_parser.get_base16_colors("~/schemes/base.yaml"),
+---    parser.get_base16_colors("~/schemes/base.yaml"),
 ---    {
 ---      base08 = "#ff0000", -- Override red
 ---      base0B = "#00ff00", -- Override green
@@ -27,7 +30,7 @@
 ---  local colors = {}
 ---  local condition = some_condition() -- e.g., vim.fn.filereadable
 ---  if condition then
----    colors = yaml_parser.get_base16_colors("~/schemes/custom.yaml")
+---    colors = parser.get_base16_colors("~/schemes/custom.yaml")
 ---  else
 ---    -- Fallback to manual colors
 ---    colors = {
@@ -36,22 +39,22 @@
 ---  end
 ---
 ---  require("base16-pro-max").setup({ colors = colors })
----<
+-----<
 ---
 ---# Cache Management ~
 ---
 ---Cache is saved to `vim.fn.stdpath("cache") .. "/base16_cache"` with filename of `schemes_cache.lua`
 ---
---->lua
----  local yaml_parser = require("base16-pro-max.parser")
+---->lua
+---  local parser = require("base16-pro-max.parser")
 ---
 ---  -- Clear all cached data
----  yaml_parser.clear_cache()
+---  parser.clear_cache()
 ---
 ---  -- Get cache statistics
----  local stats = yaml_parser.get_cache_stats()
+---  local stats = parser.get_cache_stats()
 ---  print(vim.inspect(stats))
----<
+-----<
 ---
 ---@brief ]]
 
@@ -213,24 +216,82 @@ function M.parse_base16_yaml(path)
   return result
 end
 
+---@private
+---Parse Base16 JSON with persistent caching
+---@param path string
+---@return table
+function M.parse_base16_json(path)
+  local expanded_path = vim.fn.expand(path)
+
+  if _scheme_cache[expanded_path] and not is_file_modified(expanded_path) then
+    return _scheme_cache[expanded_path]
+  end
+
+  local stat = vim.uv.fs_stat(expanded_path)
+  if not stat then
+    _scheme_cache[expanded_path] = {}
+    return {}
+  end
+
+  local fd = vim.uv.fs_open(expanded_path, "r", 438)
+  if not fd then
+    _scheme_cache[expanded_path] = {}
+    return {}
+  end
+
+  local content = vim.uv.fs_read(fd, stat.size, 0)
+  vim.uv.fs_close(fd)
+
+  if not content then
+    _scheme_cache[expanded_path] = {}
+    return {}
+  end
+
+  local ok, data = pcall(vim.json.decode, content)
+  if not ok or type(data) ~= "table" then
+    _scheme_cache[expanded_path] = {}
+    return {}
+  end
+
+  -- Handle both flat {"base00": "..."} and nested {"palette": {"base00": "..."}} formats
+  local palette = data.palette or data
+
+  local result = {}
+  for k, v in pairs(palette) do
+    if type(k) == "string" and type(v) == "string" then
+      result[k] = normalize_hex(v)
+    end
+  end
+
+  _scheme_cache[expanded_path] = result
+
+  if next(result) then
+    vim.schedule(function()
+      save_persistent_cache()
+    end)
+  end
+
+  return result
+end
+
 ---Get Base16 colors with optimized filtering
 ---@param path string
 ---@return table
 function M.get_base16_colors(path)
-  -- make sure its a yaml or yml file
-  if not path:match("%.ya?ml$") then
-    error("Only YAML/YML files are supported")
+  local scheme
+  if path:match("%.json$") then
+    scheme = M.parse_base16_json(path)
+  elseif path:match("%.ya?ml$") then
+    scheme = M.parse_base16_yaml(path)
+  else
+    error("Only JSON, YAML/YML files are supported")
   end
 
-  local scheme = M.parse_base16_yaml(path)
   local palette = {}
 
-  -- Pre-compile pattern for better performance with many calls
   for k, v in pairs(scheme) do
-    -- Fastest check: length first, then string comparison
     if #k == 6 and k:sub(1, 4) == "base" then
       local suffix = k:sub(5, 6)
-      -- Validate it's a proper base16 key (base00-base0F)
       if suffix:match("^0[0-9a-fA-F]$") then
         palette[k] = v
       end
