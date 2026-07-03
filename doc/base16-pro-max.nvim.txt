@@ -57,7 +57,7 @@ Setup ·····································
 API ······················································· |base16-pro-max.api|
 Plugin Integrations ··································· |base16-pro-max.plugins|
 Types ··················································· |base16-pro-max.types|
-YAML parser for base16-pro-max ························· |base16-pro-max.parser|
+YAML/JSON parser for base16-pro-max ···················· |base16-pro-max.parser|
 
 ==============================================================================
 Setup                                                     *base16-pro-max.setup*
@@ -697,7 +697,7 @@ Base16ProMax.Group.Alias                              *Base16ProMax.Group.Alias*
 
 
 ==============================================================================
-YAML parser for base16-pro-max                           *base16-pro-max.parser*
+YAML/JSON parser for base16-pro-max                      *base16-pro-max.parser*
 
 # Module setup ~
 
@@ -706,15 +706,18 @@ There's no need to call `setup()` manually.
 
 # Usage ~
 
->lua
-  local yaml_parser = require("base16-pro-max.parser")
+->lua
+  local parser = require("base16-pro-max.parser")
 
   -- Load from YAML file
-  local colors = yaml_parser.get_base16_colors("~/schemes/gruvbox.yaml")
+  local colors = parser.get_base16_colors("~/schemes/gruvbox.yaml")
 
-  -- Mix YAML colors with manual overrides
+  -- Load from JSON file (e.g. Stylix palette.json)
+  local colors = parser.get_base16_colors("~/.config/stylix/palette.json")
+
+  -- Mix parsed colors with manual overrides
   local colors = vim.tbl_extend("force",
-    yaml_parser.get_base16_colors("~/schemes/base.yaml"),
+    parser.get_base16_colors("~/schemes/base.yaml"),
     {
       base08 = "#ff0000", -- Override red
       base0B = "#00ff00", -- Override green
@@ -725,7 +728,7 @@ There's no need to call `setup()` manually.
   local colors = {}
   local condition = some_condition() -- e.g., vim.fn.filereadable
   if condition then
-    colors = yaml_parser.get_base16_colors("~/schemes/custom.yaml")
+    colors = parser.get_base16_colors("~/schemes/custom.yaml")
   else
     -- Fallback to manual colors
     colors = {
@@ -734,22 +737,22 @@ There's no need to call `setup()` manually.
   end
 
   require("base16-pro-max").setup({ colors = colors })
-<
+--<
 
 # Cache Management ~
 
 Cache is saved to `vim.fn.stdpath("cache") .. "/base16_cache"` with filename of `schemes_cache.lua`
 
->lua
-  local yaml_parser = require("base16-pro-max.parser")
+->lua
+  local parser = require("base16-pro-max.parser")
 
   -- Clear all cached data
-  yaml_parser.clear_cache()
+  parser.clear_cache()
 
   -- Get cache statistics
-  local stats = yaml_parser.get_cache_stats()
+  local stats = parser.get_cache_stats()
   print(vim.inspect(stats))
-<
+--<
 
 
 M.get_base16_colors({path})                                *M.get_base16_colors*
