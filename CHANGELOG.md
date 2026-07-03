@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/y3owk1n/base16-pro-max.nvim/compare/v1.1.0...v1.2.0) (2026-07-03)
+
+
+### Features
+
+* **parser:** add json parser for stylix support ([#63](https://github.com/y3owk1n/base16-pro-max.nvim/issues/63)) ([61bbc8e](https://github.com/y3owk1n/base16-pro-max.nvim/commit/61bbc8e5cce7b5ea5f6b6de890ec94ab8e2e86cb))
+
 ## [1.1.0](https://github.com/y3owk1n/base16-pro-max.nvim/compare/v1.0.0...v1.1.0) (2025-09-17)
 
 
